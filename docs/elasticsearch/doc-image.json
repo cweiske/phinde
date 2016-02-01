@@ -1,0 +1,14 @@
+{
+    'type': 'image',
+    'mimetype': 'image/png',
+    'url': 'http://example.org/image.png',
+    'domain': 'example.org',
+    'source': 'http://example.org/foo.htm',
+    'sourcetitle': 'Alt text from linking HTML page',
+    'text': [
+        'EXIF-description text'
+    ],
+    'tags': [],
+    'crdate': '2016-01-30T12:23:42+01:00',
+    'modate': '2016-01-30T12:23:42+01:00',
+}

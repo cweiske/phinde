@@ -1,0 +1,40 @@
+{
+    "mappings": {
+        "document": {
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
+                "type": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
+                "subtype": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
+                "mimetype": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
+                "url": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
+                "domain": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
+                "source": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
+                "language": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                }
+            }
+        }
+    }
+}
