@@ -58,7 +58,30 @@ $indexDoc = new \stdClass();
 $doc = new \DOMDocument();
 //@ to hide parse warning messages in invalid html
 @$doc->loadHTML($res->getBody());
-$sx = simplexml_import_dom($doc);
+$dx = new \DOMXPath($doc);
+
+//remove script tags
+$elems = array();
+foreach ($doc->getElementsbyTagName('script') as $elem) {
+    $elems[] = $elem;
+}
+foreach ($elems as $elem) {
+    $elem->parentNode->removeChild($elem);
+}
+
+//default content: <body>
+$xpContext = $doc->getElementsByTagName('body')->item(0);
+
+//use microformats content if it exists
+$xpElems = $dx->query(
+    "//*[contains(concat(' ', normalize-space(@class), ' '), ' e-content ')]"
+);
+if ($xpElems->length) {
+    $xpContext = $xpElems->item(0);
+} else if ($doc->getElementById('content')) {
+    //if there is an element with ID "content", we'll use this
+    $xpContext = $doc->getElementById('content');
+}
 
 $indexDoc->url = $url;
 $indexDoc->schemalessUrl = Helper::noSchema($url);
@@ -72,61 +95,81 @@ $indexDoc->domain   = parse_url($url, PHP_URL_HOST);
 
 $indexDoc->author = new \stdClass();
 
-$arSxElems = $sx->xpath('/html/head/meta[@name="author"]');
-if (count($arSxElems)) {
-    $indexDoc->author->name = trim($arSxElems[0]['content']);
+$arXpElems = $dx->query('/html/head/meta[@name="author"]');
+if ($arXpElems->length) {
+    $indexDoc->author->name = trim(
+        $arXpElems->item(0)->attributes->getNamedItem('content')->textContent
+    );
 }
-$arSxElems = $sx->xpath('/html/head/link[@rel="author"]');
-if (count($arSxElems)) {
-    $indexDoc->author->url = (string) $base->resolve($arSxElems[0]['href']);
+$arXpElems = $dx->query('/html/head/link[@rel="author"]');
+if ($arXpElems->length) {
+    $indexDoc->author->url = trim(
+        $base->resolve(
+            $arXpElems->item(0)->attributes->getNamedItem('href')->textContent
+        )
+    );
 }
 
-$indexDoc->title = (string) $sx->head->title;
+
+$arXpElems = $dx->query('/html/head/title');
+if ($arXpElems->length) {
+    $indexDoc->title = trim(
+        $arXpElems->item(0)->textContent
+    );
+}
+
 foreach (array('h1', 'h2', 'h3', 'h4', 'h5', 'h6') as $headlinetype) {
     $indexDoc->$headlinetype = array();
-    //FIXME: limit to h-entry children
-    foreach ($sx->xpath('//' . $headlinetype) as $xheadline) {
+    foreach ($xpContext->getElementsByTagName($headlinetype) as $xheadline) {
         array_push(
             $indexDoc->$headlinetype,
-            trim(dom_import_simplexml($xheadline)->textContent)
+            trim($xheadline->textContent)
         );
     }
 }
 
 //FIXME: limit to h-entry e-content
 //FIXME: insert space after br
-//FIXME: remove javascript
 $indexDoc->text = array();
-foreach ($doc->getElementsByTagName('body') as $body) {
-    $indexDoc->text[] = trim(
-        str_replace(
-            array("\r\n", "\n", "\r", '  '),
-            ' ',
-            $body->textContent
-        )
-    );
-}
+$indexDoc->text[] = trim(
+    str_replace(
+        array("\r\n", "\n", "\r", '  '),
+        ' ',
+        $xpContext->textContent
+    )
+);
 
 //tags
 $tags = array();
-foreach ($sx->xpath('/html/head/meta[@name="keywords"]') as $xkeywords) {
-    foreach (explode(',', $xkeywords['content']) as $keyword) {
+foreach ($dx->query('/html/head/meta[@name="keywords"]') as $xkeywords) {
+    $keywords = $xkeywords->attributes->getNamedItem('content')->textContent;
+    foreach (explode(',', $keywords) as $keyword) {
         $tags[trim($keyword)] = true;
     }
 }
 $indexDoc->tags = array_keys($tags);
 
 //dates
-$arSxdates = $sx->xpath('/html/head/meta[@name="DC.date.created"]');
-if (count($arSxdates)) {
-    $indexDoc->crdate = date('c', strtotime((string) $arSxdates[0]['content']));
+$arXpdates = $dx->query('/html/head/meta[@name="DC.date.created"]');
+if ($arXpdates->length) {
+    $indexDoc->crdate = date(
+        'c',
+        strtotime(
+            $arXpdates->item(0)->attributes->getNamedItem('content')->textContent
+        )
+    );
 }
 //FIXME: keep creation date from database, or use modified date if we
 // do not have it there
 
-$arSxdates = $sx->xpath('/html/head/meta[@name="DC.date.modified"]');
-if (count($arSxdates)) {
-    $indexDoc->modate = date('c', strtotime((string) $arSxdates[0]['content']));
+$arXpdates = $dx->query('/html/head/meta[@name="DC.date.modified"]');
+if ($arXpdates->length) {
+    $indexDoc->modate = date(
+        'c',
+        strtotime(
+            $arXpdates->item(0)->attributes->getNamedItem('content')->textContent
+        )
+    );
 } else {
     $lm = $res->getHeader('last-modified');
     if ($lm !== null) {
@@ -139,12 +182,16 @@ if (count($arSxdates)) {
 
 //language
 //there may be "en-US" and "de-DE"
-$indexDoc->language = strtolower(substr((string) $sx['lang'], 0, 2));
+$indexDoc->language = strtolower(
+    substr(
+        $doc->documentElement->attributes->getNamedItem('lang')->textContent,
+        0, 2
+    )
+);
 //FIXME: fallback, autodetection
 //FIXME: check noindex
 
-
-//var_dump($indexDoc);
+//var_dump($indexDoc);die();
 
 $indexDoc->status = 'indexed';
 
