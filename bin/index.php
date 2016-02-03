@@ -24,11 +24,11 @@ if ($existingDoc && $existingDoc->status == 'indexed') {
 }
 //FIXME: sourcetitle, sourcelink
 
-//FIXME: enable redirects
-//FIXME: enable ssl 
 $req = new \HTTP_Request2($url);
+$req->setConfig('follow_redirects', true);
 $req->setConfig('connect_timeout', 5);
 $req->setConfig('timeout', 10);
+$req->setConfig('ssl_verify_peer', false);
 $res = $req->send();
 //FIXME: try-catch
 
@@ -49,7 +49,7 @@ if (!in_array($mimetype, $supportedIndexTypes)) {
 
 //FIXME: update index only if changed since last index time
 //FIXME: extract base url from html
-//FIXME: use final URL after redirects
+$url = $res->getEffectiveUrl();
 $base = new \Net_URL2($url);
 
 $indexDoc = new \stdClass();
