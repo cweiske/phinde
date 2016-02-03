@@ -2,12 +2,7 @@
 <?php
 namespace phinde;
 // index a given URL
-set_include_path(__DIR__ . '/../src/' . PATH_SEPARATOR . get_include_path());
-require_once __DIR__ . '/../data/config.php';
-require_once 'HTTP/Request2.php';
-require_once 'Elasticsearch.php';
-require_once 'Elasticsearch/Request.php';
-require_once 'functions.php';
+require_once __DIR__ . '/../src/init.php';
 
 $supportedIndexTypes = array(
     'application/xhtml+xml',
@@ -143,7 +138,7 @@ if (count($arSxdates)) {
 
 //language
 //there may be "en-US" and "de-DE"
-$indexDoc->language = substr((string) $sx['lang'], 0, 2);
+$indexDoc->language = strtolower(substr((string) $sx['lang'], 0, 2));
 //FIXME: fallback, autodetection
 //FIXME: check noindex
 

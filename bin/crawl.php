@@ -1,14 +1,7 @@
 #!/usr/bin/env php
 <?php
 namespace phinde;
-
-set_include_path(__DIR__ . '/../src/' . PATH_SEPARATOR . get_include_path());
-require_once __DIR__ . '/../data/config.php';
-require_once 'HTTP/Request2.php';
-require_once 'Elasticsearch.php';
-require_once 'Elasticsearch/Request.php';
-require_once 'Net/URL2.php';
-require_once 'functions.php';
+require_once __DIR__ . '/../src/init.php';
 
 $supportedCrawlTypes = array(
     'text/html', 'application/xhtml+xml'
@@ -23,7 +16,7 @@ if ($argc < 2) {
 $es = new Elasticsearch($GLOBALS['phinde']['elasticsearch']);
 
 $url = $argv[1];
-if (!isUrlAllowed($url)) {
+if (!Helper::isUrlAllowed($url)) {
     echo "Domain is not allowed; not crawling\n";
     exit(2);
 }

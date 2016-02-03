@@ -1,0 +1,11 @@
+{% set doc = hit._source %}
+<li class="hit">
+ <a href="{{doc.url}}">{{doc.title}}</a>
+ {% if doc.author.name %}
+ by <a href="{{doc.author.url}}">{{doc.author.name}}</a>
+ {% endif %}
+ <br/><tt>{{doc.extra.cleanUrl}}</tt>
+ {% if doc.modate %}
+ <br/>Changed: {{doc.extra.day}}
+ {% endif %}
+</li>

@@ -1,0 +1,15 @@
+.footer {
+    text-align: center;
+    color: #AAA;
+}
+.navbar {
+    margin-bottom: 1ex;
+}
+
+.hits {
+    list-style-type: none;
+    margin-left: 0px;
+}
+.hit {
+    margin-bottom: 2ex;
+}

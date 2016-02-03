@@ -68,7 +68,7 @@ class Elasticsearch
         $r->send();
     }
 
-    public function search($query, $page, $perPage)
+    public function search($query, $filters, $page, $perPage)
     {
         $r = new Elasticsearch_Request(
             $this->baseUrl . 'document/_search',
@@ -94,7 +94,7 @@ class Elasticsearch
                             'term' => array(
                                 'status' => 'indexed'
                             )
-                        )
+                        ),
                     )
                 )
             ),
@@ -126,6 +126,14 @@ class Elasticsearch
                 //array('modate' => array('order' => 'desc'))
             )
         );
+        foreach ($filters as $type => $value) {
+            $doc['query']['bool']['must'][] = array(
+                'term' => array(
+                    $type => $value
+                )
+            );
+        }
+
         //unset($doc['_source']);
 
         //ini_set('xdebug.var_display_max_depth', 10);

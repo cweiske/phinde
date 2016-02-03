@@ -1,0 +1,48 @@
+<p>
+ Filter results by:
+</p>
+{% if aggregations.tags.buckets|length > 1 %}
+<b>Tag</b>
+<ul class="nav nav-pills">
+{% for bucket in aggregations.tags.buckets|slice(0, 10) %}
+ <li>
+  <a href="{{bucket.url}}">{{bucket.key}} ({{bucket.doc_count}})</a>
+ </li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if aggregations.domain.buckets|length > 1 %}
+<!-- FIXME: negate domain -->
+<b>Domain</b>
+<ul class="nav nav-pills">
+{% for bucket in aggregations.domain.buckets|slice(0, 10) %}
+ <li>
+  <a href="{{bucket.url}}">{{bucket.key}} ({{bucket.doc_count}})</a>
+ </li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if aggregations.language.buckets|length > 1 %}
+<b>Language</b>
+<ul class="nav nav-pills">
+{% for bucket in aggregations.language.buckets|slice(0, 10) %}
+ <li>
+  <a href="{{bucket.url}}">{{bucket.key}} ({{bucket.doc_count}})</a>
+ </li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if aggregations.type.buckets|length > 1 %}
+<b>Type</b>
+<ul class="nav nav-pills">
+{% for bucket in aggregations.type.buckets|slice(0, 10) %}
+ <li>
+  <a href="{{bucket.url}}">{{bucket.key}} ({{bucket.doc_count}})</a>
+ </li>
+{% endfor %}
+</ul>
+{% endif %}
+

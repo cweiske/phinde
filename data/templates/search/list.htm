@@ -1,0 +1,15 @@
+{% if hitcount == 0 %}
+ <p>
+  Sorry, no results for "<tt>{{query}}</tt>".
+ </p>
+{% else %}
+ <p>
+  Found {{hitcount}} search results for "<tt>{{query}}</tt>":
+ </p>
+ <ul class="hits">
+ {% for hit in hits %}
+   {% include 'search/hit.htm' %}
+ {% endfor %}
+ </ul>
+ {% include 'pager.htm' %}
+{% endif %}

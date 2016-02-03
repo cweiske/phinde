@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta charset="utf-8" />
+  <title>{% block title %}{% endblock %} - {{title}}</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/font-awesome.css"/>
+  <link rel="stylesheet" href="css/phinde.css"/>
+  <link rel="icon" href="favicon.ico"/>
+  <meta name="generator" content="phinde" />
+  {% block meta %}{% endblock %}
+ </head>
+ <body>
+
+  {% block maincontent %}{% endblock %}
+
+  <div class="container footer">
+   Powered by <em>phinde</em>, the self-hosted search engine
+  </div>
+ </body>
+</html>
