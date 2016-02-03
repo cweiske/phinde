@@ -61,6 +61,7 @@ $doc = new \DOMDocument();
 $sx = simplexml_import_dom($doc);
 
 $indexDoc->url = $url;
+$indexDoc->schemalessUrl = Helper::noSchema($url);
 $indexDoc->type = 'html';
 $indexDoc->subtype = '';
 $indexDoc->mimetype = $mimetype;

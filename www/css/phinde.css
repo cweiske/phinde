@@ -25,3 +25,6 @@
 .hit .date {
     color: #666;
 }
+.hit em.hl {
+    font-weight: bold;
+}

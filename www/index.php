@@ -54,9 +54,18 @@ function buildLink($baseLink, $filters, $addFilterType, $addFilterValue)
     return $baseLink;
 }
 
+$site = null;
+if (preg_match('#site:([^ ]*)#', $query, $matches)) {
+    $site = $matches[1];
+    $cleanQuery = trim(str_replace('site:' . $site, '', $query));
+    $site = Helper::noSchema($site);
+} else {
+    $cleanQuery = $query;
+}
+
 $timeBegin = microtime(true);
 $es = new Elasticsearch($GLOBALS['phinde']['elasticsearch']);
-$res = $es->search($query, $filters, $page, $perPage);
+$res = $es->search($cleanQuery, $filters, $site, $page, $perPage);
 $timeEnd = microtime(true);
 
 $pager = new Html_Pager(
@@ -67,8 +76,19 @@ $pager = new Html_Pager(
 foreach ($res->hits->hits as &$hit) {
     $doc = $hit->_source;
     if ($doc->title == '') {
-        $doc->title = '(no title)';
+        $doc->htmlTitle = '(no title)';
     }
+    if (isset($hit->highlight->title[0])) {
+        $doc->htmlTitle = $hit->highlight->title[0];
+    } else {
+        $doc->htmlTitle = htmlspecialchars($doc->title);
+    }
+    if (isset($hit->highlight->text[0])) {
+        $doc->htmlText = $hit->highlight->text[0];
+    } else {
+        $doc->htmlText = null;
+    }
+
     $doc->extra = new \stdClass();
     $doc->extra->cleanUrl = preg_replace('#^.*://#', '', $doc->url);
     if (isset($doc->modate)) {
@@ -81,13 +101,14 @@ foreach ($res->aggregations as $key => &$aggregation) {
         $bucket->url = buildLink($baseLink, $filters, $key, $bucket->key);
     }
 }
-//var_dump($res->aggregations);
 
 render(
     'search',
     array(
         'queryTime' => round($timeEnd - $timeBegin, 2) . 'ms',
         'query' => $query,
+        'cleanQuery' => $cleanQuery,
+        'site' => $site,
         'hitcount' => $res->hits->total,
         'hits' => $res->hits->hits,
         'aggregations' => $res->aggregations,

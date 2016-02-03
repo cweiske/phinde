@@ -68,7 +68,7 @@ class Elasticsearch
         $r->send();
     }
 
-    public function search($query, $filters, $page, $perPage)
+    public function search($query, $filters, $site, $page, $perPage)
     {
         $r = new Elasticsearch_Request(
             $this->baseUrl . 'document/_search',
@@ -96,6 +96,24 @@ class Elasticsearch
                             )
                         ),
                     )
+                )
+            ),
+            'highlight' => array(
+                'pre_tags' => array('<em class="hl">'),
+                'order' => 'score',
+                'fields' => array(
+                    'title' => array(
+                        'require_field_match' => false,
+                        'number_of_fragments' => 0,
+                    ),
+                    'url' => array(
+                        'require_field_match' => false,
+                        'number_of_fragments' => 0,
+                    ),
+                    'text' => array(
+                        'require_field_match' => false,
+                        'number_of_fragments' => 1,
+                    ),
                 )
             ),
             'aggregations' => array(
@@ -133,11 +151,20 @@ class Elasticsearch
                 )
             );
         }
+        if ($site != '') {
+            $doc['query']['bool']['must'][] = array(
+                'prefix' => array(
+                    'schemalessUrl' => array(
+                        'value' => $site
+                    )
+                )
+            );
+        }
 
         //unset($doc['_source']);
 
         //ini_set('xdebug.var_display_max_depth', 10);
-        //return json_decode(json_encode($doc));
+        //echo json_encode($doc);die();
         $r->setBody(json_encode($doc));
         $res = $r->send();
         return json_decode($res->getBody());

@@ -1,7 +1,7 @@
 {% set doc = hit._source %}
 <li class="hit">
  <span class="title">
-  <a href="{{doc.url}}">{{doc.title}}</a>
+  <a href="{{doc.url}}">{{doc.htmlTitle|raw}}</a>
   {% if doc.author.name %}
   by
   <em>
@@ -19,5 +19,6 @@
   {% if doc.modate %}
   <span class="date">{{doc.extra.day|date("Y-m-d")}}</span>
   {% endif %}
+  {{doc.htmlText|raw}}
  </span>
 </li>

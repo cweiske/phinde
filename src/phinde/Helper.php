@@ -11,5 +11,14 @@ class Helper
         }
         return true;
     }
+
+    public static function noSchema($url)
+    {
+        return str_replace(
+            array('http://', 'https://'),
+            '',
+            $url
+        );
+    }
 }
 ?>

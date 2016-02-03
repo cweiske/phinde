@@ -1,3 +1,9 @@
+Features
+========
+- Site search
+
+  - Query: ``foo bar site:www.example.org/dir/``
+
 Dependencies
 ============
 - PHP 5.5+

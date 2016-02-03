@@ -4,7 +4,13 @@
  </p>
 {% else %}
  <p>
-  Found {{hitcount}} search results for "<tt>{{query}}</tt>" in {{queryTime}}:
+  Found {{hitcount}} search
+  {% if hitcount == 1 %}result{% else %}results{%endif%}
+  for "<tt>{{cleanQuery}}</tt>"
+  {% if site %}
+  on <tt>{{site}}</tt>
+  {% endif %}
+  in {{queryTime}}:
  </p>
  <ul class="hits">
  {% for hit in hits %}
