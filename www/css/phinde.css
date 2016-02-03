@@ -13,3 +13,15 @@
 .hit {
     margin-bottom: 2ex;
 }
+.hit .title {
+    font-size: 120%;
+}
+.hit .url {
+    color: #070;
+}
+.hit .extract {
+    font-size: 95%;
+}
+.hit .date {
+    color: #666;
+}

@@ -1,11 +1,23 @@
 {% set doc = hit._source %}
 <li class="hit">
- <a href="{{doc.url}}">{{doc.title}}</a>
- {% if doc.author.name %}
- by <a href="{{doc.author.url}}">{{doc.author.name}}</a>
- {% endif %}
- <br/><tt>{{doc.extra.cleanUrl}}</tt>
- {% if doc.modate %}
- <br/>Changed: {{doc.extra.day}}
- {% endif %}
+ <span class="title">
+  <a href="{{doc.url}}">{{doc.title}}</a>
+  {% if doc.author.name %}
+  by
+  <em>
+   {% if doc.author.url %}
+   <a href="{{doc.author.url}}">{{doc.author.name}}</a>
+   {% else %}
+   {{doc.author.name}}
+   {% endif %}
+  </em>
+  {% endif %}
+ </span>
+ <br/><tt class="url" title="{{doc.extra.cleanUrl}}">{{ellipsis(doc.extra.cleanUrl, 60)}}</tt>
+ <span class="extract">
+  <br/>
+  {% if doc.modate %}
+  <span class="date">{{doc.extra.day|date("Y-m-d")}}</span>
+  {% endif %}
+ </span>
 </li>

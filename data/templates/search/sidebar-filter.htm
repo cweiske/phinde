@@ -1,0 +1,21 @@
+{% if attribute(activeFilters, type) %}
+ <b>{{title}}</b>
+ <ul class="nav nav-pills">
+  <li class="active">
+   <a href="{{attribute(activeFilters, type).removeUrl}}">
+    {{activeFilters[type].label|default('unknown')}} ❌
+   </a>
+  </li>
+ </ul>
+{% elseif attribute(aggregations, type).buckets|length > 1 %}
+<b>{{title}}</b>
+<ul class="nav nav-pills">
+{% for bucket in attribute(aggregations, type).buckets|slice(0, 10) %}
+ <li>
+  <a href="{{bucket.url}}">
+   {{bucket.key|default('unknown')}} ({{bucket.doc_count}})
+  </a>
+ </li>
+{% endfor %}
+</ul>
+{% endif %}

@@ -12,6 +12,14 @@ $GLOBALS['twig'] = new \Twig_Environment(
 );
 $GLOBALS['twig']->addExtension(new \Twig_Extension_Debug());
 
+$twig->addFunction('ellipsis', new \Twig_Function_Function('\phinde\ellipsis'));
+function ellipsis($text, $maxlength)
+{
+    if (strlen($text) > $maxlength) {
+        $text = substr($text, 0, $maxlength - 1) . '…';
+    }
+    return $text;
+}
 
 function render($tplname, $vars = array(), $return = false)
 {

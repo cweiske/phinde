@@ -18,6 +18,8 @@ if (isset($_GET['page'])) {
 }
 $perPage = 10;//$GLOBALS['phinde']['perPage'];
 
+$baseLink = '?q=' . urlencode($query);
+
 $filters = array();
 if (isset($_GET['filter'])) {
     $allowedFilter = array('domain', 'language', 'tags', 'term');
@@ -27,13 +29,37 @@ if (isset($_GET['filter'])) {
         }
     }
 }
+$activeFilters = array();
+foreach ($filters as $type => $value) {
+    $activeFilters[$type] = array(
+        'label' => $value,
+        'removeUrl' => buildLink($baseLink, $filters, $type, null),
+    );
+}
+
+function buildLink($baseLink, $filters, $addFilterType, $addFilterValue)
+{
+    if ($addFilterValue === null) {
+        if (array_key_exists($addFilterType, $filters)) {
+            unset($filters[$addFilterType]);
+        }
+    } else {
+        $filters[$addFilterType] = $addFilterValue;
+    }
+
+    $params = http_build_query(array('filter' => $filters));
+    if (strlen($params)) {
+        return $baseLink . '&' . $params;
+    }
+    return $baseLink;
+}
 
 $es = new Elasticsearch($GLOBALS['phinde']['elasticsearch']);
 $res = $es->search($query, $filters, $page, $perPage);
 
 $pager = new Html_Pager(
     $res->hits->total, $perPage, $page + 1,
-    '?q=' . $query
+    $baseLink
 );
 
 foreach ($res->hits->hits as &$hit) {
@@ -48,11 +74,9 @@ foreach ($res->hits->hits as &$hit) {
     }
 }
 
-$baseLink = '?q=' . urlencode($query);
 foreach ($res->aggregations as $key => &$aggregation) {
     foreach ($aggregation->buckets as &$bucket) {
-        $bucket->url = $baseLink
-            . '&filter[' . urlencode($key) . ']=' . urlencode($bucket->key);
+        $bucket->url = buildLink($baseLink, $filters, $key, $bucket->key);
     }
 }
 //var_dump($res->aggregations);
@@ -64,6 +88,7 @@ render(
         'hitcount' => $res->hits->total,
         'hits' => $res->hits->hits,
         'aggregations' => $res->aggregations,
+        'activeFilters' => $activeFilters,
         'pager' => $pager
     )
 );
