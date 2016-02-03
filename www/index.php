@@ -54,8 +54,10 @@ function buildLink($baseLink, $filters, $addFilterType, $addFilterValue)
     return $baseLink;
 }
 
+$timeBegin = microtime(true);
 $es = new Elasticsearch($GLOBALS['phinde']['elasticsearch']);
 $res = $es->search($query, $filters, $page, $perPage);
+$timeEnd = microtime(true);
 
 $pager = new Html_Pager(
     $res->hits->total, $perPage, $page + 1,
@@ -84,6 +86,7 @@ foreach ($res->aggregations as $key => &$aggregation) {
 render(
     'search',
     array(
+        'queryTime' => round($timeEnd - $timeBegin, 2) . 'ms',
         'query' => $query,
         'hitcount' => $res->hits->total,
         'hits' => $res->hits->hits,
