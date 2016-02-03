@@ -86,7 +86,7 @@ foreach ($links as $link) {
     //var_dump($linkTitle, $linkUrl);
     $es->markQueued($linkUrl);
     addToIndex($linkUrl, $linkTitle, $url);
-    if (isUrlAllowed($linkUrl)) {
+    if (Helper::isUrlAllowed($linkUrl)) {
         addToCrawl($linkUrl);
     }
     $alreadySeen[$linkUrl] = true;

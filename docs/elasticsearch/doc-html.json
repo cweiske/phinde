@@ -1,41 +1,43 @@
 {
-    'type': 'html',
-    'subtype': 'rsvp',
-    'mimetype': 'application/xhtml+xml',
-    'url': 'http://example.org/foo.htm',
-    'domain': 'example.org',
-    'source': [
-        'http://example.org/linkfarm.htm'
+    "status": "indexed",
+    "type": "html",
+    "subtype": "rsvp",
+    "mimetype": "application/xhtml+xml",
+    "url": "http://example.org/foo.htm",
+    "schemalessUrl": "example.org/foo.htm",
+    "domain": "example.org",
+    "source": [
+        "http://example.org/linkfarm.htm"
     ],
-    'sourcetitle': [
-        'Click here',
-        'Something about bar',
+    "sourcetitle": [
+        "Click here",
+        "Something about bar",
     ],
-    'language': 'en',
-    'author': {
-        'name': 'Alice Example',
-        'url': 'http://example.org/alice.htm',
+    "language": "en",
+    "author": {
+        "name": "Alice Example",
+        "url": "http://example.org/alice.htm",
     },
-    'title': 'Sample HTML page',
-    'h1': [
-        'Headline 1',
-        'Another headline 1'
+    "title": "Sample HTML page",
+    "h1": [
+        "Headline 1",
+        "Another headline 1"
     ],
-    'h2': [
-        'Subheadline'
+    "h2": [
+        "Subheadline"
     ],
-    'h3': [
-        'Subsub',
-        'Another Subsub'
+    "h3": [
+        "Subsub",
+        "Another Subsub"
     ],
-    'h4': [],
-    'h5': [],
-    'h6': [],
-    'text': [
-        'HTML converted to plain text',
-        'Another paragraph in the text'
+    "h4": [],
+    "h5": [],
+    "h6": [],
+    "text": [
+        "HTML converted to plain text",
+        "Another paragraph in the text"
     ],
-    'tags': ['example', 'test', 'documentation'],
-    'crdate': '2016-01-30T12:23:42+01:00',
-    'modate': '2016-01-30T12:23:42+01:00',
+    "tags": ["example", "test", "documentation"],
+    "crdate": "2016-01-30T12:23:42+01:00",
+    "modate": "2016-01-30T12:23:42+01:00",
 }

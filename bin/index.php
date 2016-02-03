@@ -182,12 +182,10 @@ if ($arXpdates->length) {
 
 //language
 //there may be "en-US" and "de-DE"
-$indexDoc->language = strtolower(
-    substr(
-        $doc->documentElement->attributes->getNamedItem('lang')->textContent,
-        0, 2
-    )
-);
+$xlang = $doc->documentElement->attributes->getNamedItem('lang');
+if ($xlang) {
+    $indexDoc->language = strtolower(substr($xlang->textContent, 0, 2));
+}
 //FIXME: fallback, autodetection
 //FIXME: check noindex
 
