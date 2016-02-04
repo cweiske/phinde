@@ -32,6 +32,7 @@ if ($existingDoc && $existingDoc->status == 'indexed') {
     echo "URL already indexed: $url\n";
     exit(0);
 }
+//FIXME: size limit
 //FIXME: sourcetitle, sourcelink
 
 $req = new \HTTP_Request2($url);
@@ -59,6 +60,7 @@ if (!in_array($mimetype, $supportedIndexTypes)) {
 
 //FIXME: update index only if changed since last index time
 //FIXME: extract base url from html
+//FIXME: check if effective url needs updating
 $url = $res->getEffectiveUrl();
 $base = new \Net_URL2($url);
 
@@ -77,6 +79,8 @@ removeTags($doc, 'nav');
 
 //default content: <body>
 $xpContext = $doc->getElementsByTagName('body')->item(0);
+//FIXME: follow meta refresh, no body
+// example: https://www.gnu.org/software/coreutils/
 
 //use microformats content if it exists
 $xpElems = $dx->query(
@@ -101,13 +105,13 @@ $indexDoc->domain   = parse_url($url, PHP_URL_HOST);
 
 $indexDoc->author = new \stdClass();
 
-$arXpElems = $dx->query('/html/head/meta[@name="author"]');
+$arXpElems = $dx->query('/html/head/meta[@name="author" and @content]');
 if ($arXpElems->length) {
     $indexDoc->author->name = trim(
         $arXpElems->item(0)->attributes->getNamedItem('content')->textContent
     );
 }
-$arXpElems = $dx->query('/html/head/link[@rel="author"]');
+$arXpElems = $dx->query('/html/head/link[@rel="author" and @href]');
 if ($arXpElems->length) {
     $indexDoc->author->url = trim(
         $base->resolve(
@@ -147,7 +151,7 @@ $indexDoc->text[] = trim(
 
 //tags
 $tags = array();
-foreach ($dx->query('/html/head/meta[@name="keywords"]') as $xkeywords) {
+foreach ($dx->query('/html/head/meta[@name="keywords" and @content]') as $xkeywords) {
     $keywords = $xkeywords->attributes->getNamedItem('content')->textContent;
     foreach (explode(',', $keywords) as $keyword) {
         $tags[trim($keyword)] = true;
@@ -156,7 +160,7 @@ foreach ($dx->query('/html/head/meta[@name="keywords"]') as $xkeywords) {
 $indexDoc->tags = array_keys($tags);
 
 //dates
-$arXpdates = $dx->query('/html/head/meta[@name="DC.date.created"]');
+$arXpdates = $dx->query('/html/head/meta[@name="DC.date.created" and @content]');
 if ($arXpdates->length) {
     $indexDoc->crdate = date(
         'c',
@@ -168,7 +172,7 @@ if ($arXpdates->length) {
 //FIXME: keep creation date from database, or use modified date if we
 // do not have it there
 
-$arXpdates = $dx->query('/html/head/meta[@name="DC.date.modified"]');
+$arXpdates = $dx->query('/html/head/meta[@name="DC.date.modified" and @content]');
 if ($arXpdates->length) {
     $indexDoc->modate = date(
         'c',
