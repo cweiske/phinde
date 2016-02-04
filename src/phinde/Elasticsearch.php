@@ -101,6 +101,7 @@ class Elasticsearch
             'highlight' => array(
                 'pre_tags' => array('<em class="hl">'),
                 'order' => 'score',
+                'encoder' => 'html',
                 'fields' => array(
                     'title' => array(
                         'require_field_match' => false,
