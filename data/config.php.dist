@@ -1,0 +1,9 @@
+<?php
+$GLOBALS['phinde'] = array(
+    'elasticsearch' => 'http://127.0.0.1:9200/phinde/',
+    'domains' => array(
+        'www.example.org',
+        'test.example.org'
+    )
+);
+?>
