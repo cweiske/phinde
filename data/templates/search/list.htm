@@ -3,14 +3,15 @@
   Sorry, no results for "<tt>{{query}}</tt>".
  </p>
 {% else %}
- <p>
-  Found {{hitcount}} search
+ <p class="resultinfo">
+  {{hitcount}} results
   {% if hitcount == 1 %}result{% else %}results{%endif%}
-  for "<tt>{{cleanQuery}}</tt>"
+  for "<strong><tt>{{cleanQuery}}</tt></strong>"
   {% if site %}
-  on <tt>{{site}}</tt>
+  on <strong><tt>{{site}}</tt></strong>
+  &#160;&#160;&#160;|&#160;&#160;&#160;
+  <a href="{{urlNoSite}}">Show all results</a>
   {% endif %}
-  in {{queryTime}}:
  </p>
  <ul class="hits">
  {% for hit in hits %}

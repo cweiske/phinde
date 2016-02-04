@@ -28,3 +28,7 @@
 .hit em.hl {
     font-weight: bold;
 }
+.resultinfo {
+    margin-top: 1ex;
+    margin-bottom: 2ex;
+}

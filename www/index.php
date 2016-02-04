@@ -59,8 +59,10 @@ if (preg_match('#site:([^ ]*)#', $query, $matches)) {
     $site = $matches[1];
     $cleanQuery = trim(str_replace('site:' . $site, '', $query));
     $site = Helper::noSchema($site);
+    $urlNoSite = buildLink('?q=' . urlencode($cleanQuery), $filters, null, null);
 } else {
     $cleanQuery = $query;
+    $urlNoSite = null;
 }
 
 $timeBegin = microtime(true);
@@ -108,6 +110,7 @@ render(
         'queryTime' => round($timeEnd - $timeBegin, 2) . 'ms',
         'query' => $query,
         'cleanQuery' => $cleanQuery,
+        'urlNoSite' => $urlNoSite,
         'site' => $site,
         'hitcount' => $res->hits->total,
         'hits' => $res->hits->hits,
