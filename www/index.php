@@ -107,7 +107,7 @@ foreach ($res->aggregations as $key => &$aggregation) {
 render(
     'search',
     array(
-        'queryTime' => round($timeEnd - $timeBegin, 2) . 'ms',
+        'queryTime' => round($timeEnd - $timeBegin, 2) . 's',
         'query' => $query,
         'cleanQuery' => $cleanQuery,
         'urlNoSite' => $urlNoSite,
