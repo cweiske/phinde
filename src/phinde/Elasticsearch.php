@@ -87,6 +87,7 @@ class Elasticsearch
                         array(
                             'query_string' => array(
                                 'default_field' => '_all',
+                                'default_operator' => 'AND',
                                 'query' => $query
                             )
                         ),
