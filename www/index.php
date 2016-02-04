@@ -4,7 +4,7 @@ namespace phinde;
 require 'www-header.php';
 
 if (!isset($_GET['q'])) {
-    exit('no query');
+    $_GET['q'] = '';
 }
 
 $query = $_GET['q'];
