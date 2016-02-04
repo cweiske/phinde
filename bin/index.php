@@ -14,6 +14,16 @@ if ($argc < 2) {
     exit(1);
 }
 
+function removeTags($doc, $tag) {
+    $elems = array();
+    foreach ($doc->getElementsbyTagName($tag) as $elem) {
+        $elems[] = $elem;
+    }
+    foreach ($elems as $elem) {
+        $elem->parentNode->removeChild($elem);
+    }
+}
+
 $es = new Elasticsearch($GLOBALS['phinde']['elasticsearch']);
 
 $url = $argv[1];
@@ -61,13 +71,9 @@ $doc = new \DOMDocument();
 $dx = new \DOMXPath($doc);
 
 //remove script tags
-$elems = array();
-foreach ($doc->getElementsbyTagName('script') as $elem) {
-    $elems[] = $elem;
-}
-foreach ($elems as $elem) {
-    $elem->parentNode->removeChild($elem);
-}
+removeTags($doc, 'script');
+removeTags($doc, 'style');
+removeTags($doc, 'nav');
 
 //default content: <body>
 $xpContext = $doc->getElementsByTagName('body')->item(0);
@@ -128,7 +134,7 @@ foreach (array('h1', 'h2', 'h3', 'h4', 'h5', 'h6') as $headlinetype) {
     }
 }
 
-//FIXME: limit to h-entry e-content
+//FIXME: split paragraphs
 //FIXME: insert space after br
 $indexDoc->text = array();
 $indexDoc->text[] = trim(
