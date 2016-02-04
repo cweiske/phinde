@@ -1,10 +1,15 @@
-<p>
- Filter results by:
-</p>
-{% include 'search/sidebar-filter.htm' with {'type': 'tags', 'title': 'Tag'} %}
-{% include 'search/sidebar-filter.htm' with {'type': 'domain', 'title': 'Domain'} %}
-{% include 'search/sidebar-filter.htm' with {'type': 'language', 'title': 'Language'} %}
-{% include 'search/sidebar-filter.htm' with {'type': 'type', 'title': 'Type'} %}
+{% set filters %}
+ {% include 'search/sidebar-filter.htm' with {'type': 'tags', 'title': 'Tag'} %}
+ {% include 'search/sidebar-filter.htm' with {'type': 'domain', 'title': 'Domain'} %}
+ {% include 'search/sidebar-filter.htm' with {'type': 'language', 'title': 'Language'} %}
+ {% include 'search/sidebar-filter.htm' with {'type': 'type', 'title': 'Type'} %}
+{% endset %}
+{% if filters|trim %}
+ <p>
+  Filter results by:
+ </p>
+ {{filters}}
+{% endif %}
 
 <p class="muted">
  Query took {{queryTime}}.
