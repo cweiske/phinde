@@ -17,8 +17,22 @@ if (isset($_GET['page'])) {
     $page = (int)$_GET['page'] - 1;
 }
 $perPage = 10;//$GLOBALS['phinde']['perPage'];
-
+$site = null;
+$siteParam = false;
 $baseLink = '?q=' . urlencode($query);
+
+if (preg_match('#site:([^ ]*)#', $query, $matches)) {
+    $site = $matches[1];
+    $cleanQuery = trim(str_replace('site:' . $site, '', $query));
+    $site = Helper::noSchema($site);
+} else if (isset($_GET['site']) && trim(isset($_GET['site'])) != '') {
+    $site = trim($_GET['site']);
+    $siteParam = true;
+    $cleanQuery = $query;
+    $baseLink .= '&site=' . urlencode($site);
+} else {
+    $cleanQuery = $query;
+}
 
 $filters = array();
 if (isset($_GET['filter'])) {
@@ -54,7 +68,6 @@ function buildLink($baseLink, $filters, $addFilterType, $addFilterValue)
     return $baseLink;
 }
 
-$site = null;
 if (preg_match('#site:([^ ]*)#', $query, $matches)) {
     $site = $matches[1];
     $cleanQuery = trim(str_replace('site:' . $site, '', $query));
@@ -77,7 +90,8 @@ $pager = new Html_Pager(
 
 foreach ($res->hits->hits as &$hit) {
     $doc = $hit->_source;
-    if ($doc->title == '') {
+    if (!isset($doc->title) || $doc->title == '') {
+        $doc->title = '(no title)';
         $doc->htmlTitle = '(no title)';
     }
     if (isset($hit->highlight->title[0])) {
@@ -104,6 +118,12 @@ foreach ($res->aggregations as $key => &$aggregation) {
     }
 }
 
+if ($site !== null) {
+    $urlNoSite = buildLink('?q=' . urlencode($cleanQuery), $filters, null, null);
+} else {
+    $urlNoSite = null;
+}
+
 render(
     'search',
     array(
@@ -112,6 +132,7 @@ render(
         'cleanQuery' => $cleanQuery,
         'urlNoSite' => $urlNoSite,
         'site' => $site,
+        'siteParam' => $siteParam,
         'hitcount' => $res->hits->total,
         'hits' => $res->hits->hits,
         'aggregations' => $res->aggregations,

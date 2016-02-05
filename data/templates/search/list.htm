@@ -1,10 +1,16 @@
 {% if hitcount == 0 %}
  <p>
-  Sorry, no results for "<tt>{{query}}</tt>".
+  No results
+  for "<strong><tt>{{cleanQuery}}</tt></strong>"
+  {% if site %}
+  on <strong><tt>{{site}}</tt></strong>
+  &#160;&#160;&#160;|&#160;&#160;&#160;
+  <a href="{{urlNoSite}}">Show all results</a>
+  {% endif %}
  </p>
 {% else %}
- <p class="resultinfo">
-  {{hitcount}} results
+<p class="resultinfo">
+  {{hitcount}}
   {% if hitcount == 1 %}result{% else %}results{%endif%}
   for "<strong><tt>{{cleanQuery}}</tt></strong>"
   {% if site %}

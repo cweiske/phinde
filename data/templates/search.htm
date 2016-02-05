@@ -14,6 +14,9 @@
      <form class="navbar-form pull-left">
       <input type="text" name="q" placeholder="Search"
              value="{{query}}" class="input-xxlarge"/>
+      {% if siteParam %}
+      <input type="hidden" name="site" value="{{site}}"/>
+      {% endif %}
       <button type="submit" class="btn">Find</button>
      </form>
     </div>
