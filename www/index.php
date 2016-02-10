@@ -16,6 +16,7 @@ if (isset($_GET['page'])) {
     //PEAR Pager begins at 1
     $page = (int)$_GET['page'] - 1;
 }
+
 $perPage = 10;//$GLOBALS['phinde']['perPage'];
 $site = null;
 $siteParam = false;
@@ -32,6 +33,13 @@ if (preg_match('#site:([^ ]*)#', $query, $matches)) {
     $baseLink .= '&site=' . urlencode($site);
 } else {
     $cleanQuery = $query;
+}
+
+if (isset($_GET['sort']) && $_GET['sort'] == 'date') {
+    $sort = 'date';
+    $baseLink .= '&sort=date';
+} else {
+    $sort = '';
 }
 
 $filters = array();
@@ -80,7 +88,7 @@ if (preg_match('#site:([^ ]*)#', $query, $matches)) {
 
 $timeBegin = microtime(true);
 $es = new Elasticsearch($GLOBALS['phinde']['elasticsearch']);
-$res = $es->search($cleanQuery, $filters, $site, $page, $perPage);
+$res = $es->search($cleanQuery, $filters, $site, $page, $perPage, $sort);
 $timeEnd = microtime(true);
 
 $pager = new Html_Pager(
@@ -124,6 +132,11 @@ if ($site !== null) {
     $urlNoSite = null;
 }
 
+$urlSortRelevance = buildLink(
+    str_replace('&sort=date', '', $baseLink), $filters, null, null
+);
+$urlSortDate = $urlSortRelevance . '&sort=date';
+
 render(
     'search',
     array(
@@ -137,7 +150,10 @@ render(
         'hits' => $res->hits->hits,
         'aggregations' => $res->aggregations,
         'activeFilters' => $activeFilters,
-        'pager' => $pager
+        'pager' => $pager,
+        'sort' => $sort,
+        'urlSortRelevance' => $urlSortRelevance,
+        'urlSortDate' => $urlSortDate,
     )
 );
 ?>

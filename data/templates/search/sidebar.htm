@@ -1,3 +1,12 @@
+{% if hitcount > 1 %}
+ Sort by:
+<div class="btn-group">
+ <a class="btn{%if sort==""%} disabled btn-primary{%endif%}" href="{{urlSortRelevance}}">Relevance</a>
+ <a class="btn{%if sort=="date"%} disabled btn-primary{%endif%}" href="{{urlSortDate}}">Date</a>
+</div>
+<br/>
+<br/>
+{% endif %}
 {% set filters %}
  {% include 'search/sidebar-filter.htm' with {'type': 'tags', 'title': 'Tag'} %}
  {% include 'search/sidebar-filter.htm' with {'type': 'domain', 'title': 'Domain'} %}

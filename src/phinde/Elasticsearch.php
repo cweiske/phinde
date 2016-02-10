@@ -68,8 +68,14 @@ class Elasticsearch
         $r->send();
     }
 
-    public function search($query, $filters, $site, $page, $perPage)
+    public function search($query, $filters, $site, $page, $perPage, $sort)
     {
+        if ($sort == 'date') {
+            $sortCfg = array('modate' => array('order' => 'desc'));
+        } else {
+            $sortCfg = array();
+        }
+
         $r = new Elasticsearch_Request(
             $this->baseUrl . 'document/_search',
             \HTTP_Request2::METHOD_GET
@@ -142,9 +148,7 @@ class Elasticsearch
             ),
             'from' => $page * $perPage,
             'size' => $perPage,
-            'sort' => array(
-                //array('modate' => array('order' => 'desc'))
-            )
+            'sort' => $sortCfg,
         );
         foreach ($filters as $type => $value) {
             $doc['query']['bool']['must'][] = array(
