@@ -57,7 +57,6 @@ class Crawler
 
     protected function enqueue($linkInfos)
     {
-        var_dump($linkInfos);die();
         foreach ($linkInfos as $linkInfo) {
             if ($this->es->isKnown($linkInfo->url)) {
                 continue;
