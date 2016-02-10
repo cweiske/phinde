@@ -1,6 +1,16 @@
 {% extends "base.htm" %}
 
-{%block title %}"{{query}}" search results{% endblock %}
+{% block meta %}
+ {% if query %}
+ <meta name="robots" value="noindex,nofollow"/>
+ {% endif %}
+{% endblock %}
+
+{%block title %}
+ {% if query %}
+ "{{query}}" search results -
+ {% endif %}
+{% endblock %}
 
 {% block maincontent %}
   <div class="navbar navbar-inverse navbar-static-top">
@@ -24,12 +34,24 @@
   </div>
   <div class="container">
    <div class="row">
+    {% if query %}
     <div class="span9">
      {% include 'search/list.htm' %}
     </div>
     <div class="span3">
      {% include 'search/sidebar.htm' %}
     </div>
+    {% else %}
+    <div class="span3"></div>
+    <div class="span6">
+     <div class="hero-unit">
+      <h2>Hi!</h2>
+      <p>
+       Type something in the text box above to search ⬆
+      </p>
+     </div>
+    </div>
+    {% endif %}
    </div>
   </div>
 {% endblock %}

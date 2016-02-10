@@ -1,5 +1,5 @@
 {% if hitcount == 0 %}
- <p>
+ <div style="text-align: center; margin-top: 5ex; margin-bottom: 5ex">
   No results
   for "<strong><tt>{{cleanQuery}}</tt></strong>"
   {% if site %}
@@ -7,7 +7,7 @@
   &#160;&#160;&#160;|&#160;&#160;&#160;
   <a href="{{urlNoSite}}">Show all results</a>
   {% endif %}
- </p>
+ </div>
 {% else %}
 <p class="resultinfo">
   {{hitcount}}
