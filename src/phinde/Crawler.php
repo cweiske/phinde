@@ -28,6 +28,10 @@ class Crawler
     protected function fetch($url)
     {
         $req = new HttpRequest($url);
+        $req->setHeader(
+            'accept',
+            implode(',', array_keys(static::$supportedIndexTypes))
+        );
         $res = $req->send();
         if ($res->getStatus() !== 200) {
             throw new \Exception(
