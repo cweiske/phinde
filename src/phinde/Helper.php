@@ -20,5 +20,15 @@ class Helper
             $url
         );
     }
+
+    public static function addSchema($url)
+    {
+        if (substr($url, 0, 7) == 'http://'
+            || substr($url, 0, 8) == 'https://'
+        ) {
+            return $url;
+        }
+        return 'http://' . $url;
+    }
 }
 ?>
