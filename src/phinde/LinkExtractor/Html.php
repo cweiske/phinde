@@ -19,8 +19,21 @@ class Html
         //FIXME: extract base url from html
         $base = new \Net_URL2($url);
 
-        $xpath = new \DOMXPath($doc);
-        $links = $xpath->evaluate('//a');
+        $dx = new \DOMXPath($doc);
+
+        $meta = $dx->evaluate('/html/head/meta[@name="robots" and @value]')
+            ->item(0);
+        if ($meta) {
+            $robots = $meta->attributes->getNamedItem('value')->textContent;
+            foreach (explode(',', $robots) as $value) {
+                if (trim($value) == 'nofollow') {
+                    //we shall not follow the links
+                    return array();
+                }
+            }
+        }
+
+        $links = $dx->evaluate('//a');
         //FIXME: link rel, img, video
 
         $alreadySeen = array();
@@ -31,6 +44,13 @@ class Html
             foreach ($link->attributes as $attribute) {
                 if ($attribute->name == 'href') {
                     $href = $attribute->textContent;
+                } else if ($attribute->name == 'rel') {
+                    foreach (explode(',', $attribute->textContent) as $value) {
+                        if (trim($value) == 'nofollow') {
+                            //we shall not follow this link
+                            continue 3;
+                        }
+                    }
                 }
             }
             if ($href == '' || $href{0} == '#') {
@@ -54,7 +74,6 @@ class Html
             }
 
             //FIXME: check target type
-            //FIXME: check nofollow
             $linkInfos[] = new LinkInfo(
                $linkUrl, $linkTitle, $url
             );
