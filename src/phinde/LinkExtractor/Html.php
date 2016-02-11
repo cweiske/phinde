@@ -22,6 +22,13 @@ class Html
 
         $dx = new \DOMXPath($doc);
 
+        $xbase = $dx->evaluate('/html/head/base[@href]')->item(0);
+        if ($xbase) {
+            $base = $base->resolve(
+                $xbase->attributes->getNamedItem('href')->textContent
+            );
+        }
+
         $meta = $dx->evaluate('/html/head/meta[@name="robots" and @content]')
             ->item(0);
         if ($meta) {

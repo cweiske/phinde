@@ -72,6 +72,14 @@ $doc = new \DOMDocument();
 @$doc->loadHTML($res->getBody());
 $dx = new \DOMXPath($doc);
 
+$xbase = $dx->evaluate('/html/head/base[@href]')->item(0);
+if ($xbase) {
+    $base = $base->resolve(
+        $xbase->attributes->getNamedItem('href')->textContent
+    );
+}
+
+
 //remove script tags
 removeTags($doc, 'script');
 removeTags($doc, 'style');
