@@ -21,10 +21,10 @@ class Html
 
         $dx = new \DOMXPath($doc);
 
-        $meta = $dx->evaluate('/html/head/meta[@name="robots" and @value]')
+        $meta = $dx->evaluate('/html/head/meta[@name="robots" and @content]')
             ->item(0);
         if ($meta) {
-            $robots = $meta->attributes->getNamedItem('value')->textContent;
+            $robots = $meta->attributes->getNamedItem('content')->textContent;
             foreach (explode(',', $robots) as $value) {
                 if (trim($value) == 'nofollow') {
                     //we shall not follow the links
