@@ -6,6 +6,11 @@ class Crawler
     protected $es;
     protected $queue;
 
+    /**
+     * If the links only should be shown, not queued
+     */
+    protected $showLinksOnly = false;
+
     static $supportedIndexTypes = array(
         'application/atom+xml'  => '\\phinde\\LinkExtractor\\Atom',
         'application/xhtml+xml' => '\\phinde\\LinkExtractor\\Html',
@@ -22,7 +27,11 @@ class Crawler
     {
         $res       = $this->fetch($url);
         $linkInfos = $this->extractLinks($res);
-        $this->enqueue($linkInfos);
+        if ($this->showLinksOnly) {
+            $this->showLinks($linkInfos);
+        } else {
+            $this->enqueue($linkInfos);
+        }
     }
 
     protected function fetch($url)
@@ -69,6 +78,22 @@ class Crawler
                 $this->queue->addToCrawl($linkInfo->url);
             }
         }
+    }
+
+    protected function showLinks($linkInfos)
+    {
+        foreach ($linkInfos as $linkInfo) {
+            echo $linkInfo->url . "\n";
+            if ($linkInfo->title) {
+                echo '  title: ' . $linkInfo->title . "\n";
+                echo '  source: ' . $linkInfo->source . "\n";
+            }
+        }
+    }
+
+    public function setShowLinksOnly($showLinksOnly)
+    {
+        $this->showLinksOnly = $showLinksOnly;
     }
 }
 ?>

@@ -32,6 +32,7 @@ Dependencies
 - PHP 5.5+
 - elasticsearch 2.0
 - gearman
+- Console_CommandLine
 - Net_URL2
 
 
