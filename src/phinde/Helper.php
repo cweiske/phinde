@@ -30,5 +30,16 @@ class Helper
         }
         return 'http://' . $url;
     }
+
+    public static function sanitizeTitle($str)
+    {
+        return trim(
+            str_replace(
+                array("\r", "\n", '  ', '  '),
+                array('', ' ', ' ', ' '),
+                $str
+            )
+        );
+    }
 }
 ?>

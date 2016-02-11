@@ -2,6 +2,7 @@
 namespace phinde\LinkExtractor;
 
 use phinde\LinkInfo;
+use phinde\Helper;
 
 class Html
 {
@@ -36,10 +37,10 @@ class Html
         $links = $dx->evaluate('//a');
         //FIXME: link rel, img, video
 
-        $alreadySeen = array();
+        $alreadySeen = array($url => true);
 
         foreach ($links as $link) {
-            $linkTitle = $link->textContent;
+            $linkTitle = Helper::sanitizeTitle($link->textContent);
             $href = '';
             foreach ($link->attributes as $attribute) {
                 if ($attribute->name == 'href') {
