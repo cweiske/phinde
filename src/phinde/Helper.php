@@ -41,5 +41,23 @@ class Helper
             )
         );
     }
+
+    /**
+     * Create a full URL with protocol and host name
+     *
+     * @param string $path Path to the file, with leading /
+     *
+     * @return string Full URL
+     */
+    public static function fullUrl($path = '/')
+    {
+        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) {
+            $prot = 'https';
+        } else {
+            $prot = 'http';
+        }
+        return $prot . '://' . $_SERVER['HTTP_HOST'] . $path;
+    }
+
 }
 ?>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" 
+      xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+  <title>"{{query}}" search results</title> 
+  <link rel="self" href="{{fullUrl}}" type="application/atom+xml"/>
+  <updated>{{"now"|date("c")}}</updated>
+  <id>{{fullUrl}}</id>
+  <opensearch:totalResults>{{hitcount}}</opensearch:totalResults>
+  {% for hit in hits %}
+    {% set doc = hit._source %}
+    <entry>
+     <title>{{doc.title}}</title>
+     <link href="{{doc.url}}"/>
+     <id>{{doc.url}}</id>
+     {% if doc.modate %}
+     <updated>{{doc.modate|date('c')}}</updated>
+     {% endif %}
+     <content type="text">{{doc.htmlText|striptags}}</content>
+    </entry>
+  {% endfor %}
+</feed>

@@ -137,11 +137,20 @@ $urlSortRelevance = buildLink(
 );
 $urlSortDate = $urlSortRelevance . '&sort=date';
 
+if (isset($_GET['format']) && $_GET['format'] == 'opensearch') {
+    $template = 'opensearch';
+    $baseLink .= '&format=opensearch';
+    header('Content-type: application/atom+xml');
+} else {
+    $template = 'search';
+}
+
 render(
-    'search',
+    $template,
     array(
         'queryTime' => round($timeEnd - $timeBegin, 2) . 's',
         'query' => $query,
+        'fullUrl' => Helper::fullUrl($baseLink),
         'cleanQuery' => $cleanQuery,
         'urlNoSite' => $urlNoSite,
         'site' => $site,

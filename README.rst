@@ -24,6 +24,7 @@ Features
   - Query: ``foo bar site:example.org/dir/``
   - or use the ``site`` GET parameter:
     ``/?q=foo&site=example.org/dir``
+- OpenSearch support with HTML and Atom result lists
 
 
 ============
