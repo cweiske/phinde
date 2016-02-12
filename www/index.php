@@ -6,8 +6,8 @@ require 'www-header.php';
 if (!isset($_GET['q'])) {
     $_GET['q'] = '';
 }
+$query = trim($_GET['q']);
 
-$query = $_GET['q'];
 $page = 0;
 if (isset($_GET['page'])) {
     if (!is_numeric($_GET['page'])) {
