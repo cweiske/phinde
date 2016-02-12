@@ -57,6 +57,21 @@ class Html_Pager
         return $arLinks;
     }
 
+    public function getFullUrls()
+    {
+        $arLinks = $this->pager->getLinks();
+        $arUrls = array();
+        foreach ($arLinks['linkTagsRaw'] as $key => $link) {
+            if (isset($link['url'])) {
+                $arUrls[$key] = str_replace(
+                    '&amp;', '&',
+                    Helper::fullUrl('/'  . $link['url'])
+                );
+            }
+        }
+        return $arUrls;
+    }
+
     public function numPages()
     {
         return $this->pager->numPages();

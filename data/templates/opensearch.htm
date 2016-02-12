@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom" 
+<feed xmlns="http://www.w3.org/2005/Atom"
       xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
-  <title>"{{query}}" search results</title> 
+  <title>"{{query}}" search results</title>
   <link rel="self" href="{{fullUrl}}" type="application/atom+xml"/>
+  {% set fullUrls = pager.getFullUrls() %}
+  {% if fullUrls.first %}
+  <link rel="first" href="{{fullUrls.first}}" type="application/atom+xml"/>
+  {% endif %}
+  {% if fullUrls.prev %}
+  <link rel="prev" href="{{fullUrls.prev}}" type="application/atom+xml"/>
+  {% endif %}
+  {% if fullUrls.next %}
+  <link rel="next" href="{{fullUrls.next}}" type="application/atom+xml"/>
+  {% endif %}
+  {% if fullUrls.last %}
+  <link rel="last" href="{{fullUrls.last}}" type="application/atom+xml"/>
+  {% endif %}
+
   <updated>{{"now"|date("c")}}</updated>
   <id>{{fullUrl}}</id>
   <opensearch:totalResults>{{hitcount}}</opensearch:totalResults>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
   {% for hit in hits %}
     {% set doc = hit._source %}
     <entry>
