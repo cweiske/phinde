@@ -4,6 +4,14 @@ $GLOBALS['phinde'] = array(
     'domains' => array(
         'www.example.org',
         'test.example.org'
-    )
+    ),
+    //list of URL beginnings that should be ignored
+    'blacklist' => array(
+        'http://bad.example.org/'
+    ),
+    //list of URLs that should be subscribed to with PubSubHubbub
+    'subscriptions' => array(
+        'http://www.example.org/feed',
+    ),
 );
 ?>
