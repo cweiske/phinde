@@ -90,6 +90,17 @@ if ($xbase) {
     );
 }
 
+$meta = $dx->evaluate('/html/head/meta[@name="robots" and @content]')
+    ->item(0);
+if ($meta) {
+    $robots = $meta->attributes->getNamedItem('content')->textContent;
+    foreach (explode(',', $robots) as $value) {
+        if (trim($value) == 'noindex') {
+            echo "URL does not want to be indexed: $url\n";
+            exit(0);
+        }
+    }
+}
 
 //remove script tags
 removeTags($doc, 'script');
