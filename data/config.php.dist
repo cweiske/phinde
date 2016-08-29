@@ -13,5 +13,7 @@ $GLOBALS['phinde'] = array(
     'subscriptions' => array(
         'http://www.example.org/feed',
     ),
+    //time in seconds after which URLs may be re-indexed
+    'refreshtime' => 86400,
 );
 ?>

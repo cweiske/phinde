@@ -24,27 +24,38 @@ function removeTags($doc, $tag) {
     }
 }
 
-$es = new Elasticsearch($GLOBALS['phinde']['elasticsearch']);
-
 $url = $argv[1];
-$existingDoc = $es->get($url);
-if ($existingDoc && $existingDoc->status == 'indexed') {
-    echo "URL already indexed: $url\n";
-    exit(0);
-}
-//FIXME: size limit
-//FIXME: sourcetitle, sourcelink
 
 $req = new \HTTP_Request2($url);
 $req->setConfig('follow_redirects', true);
 $req->setConfig('connect_timeout', 5);
 $req->setConfig('timeout', 10);
 $req->setConfig('ssl_verify_peer', false);
+//FIXME: size limit
+
+$es = new Elasticsearch($GLOBALS['phinde']['elasticsearch']);
+$existingDoc = $es->get($url);
+if ($existingDoc && $existingDoc->status == 'indexed') {
+    $nMoDate     = strtotime($existingDoc->modate);
+    $refreshtime = $GLOBALS['phinde']['refreshtime'];
+    if (time() - $nMoDate < $refreshtime) {
+        echo "URL already indexed less than $refreshtime seconds ago: $url\n";
+        exit(0);
+    }
+
+    $req->setHeader('If-Modified-Since: ' . date('r', $nMoDate));
+}
+//FIXME: sourcetitle, sourcelink
+
 $res = $req->send();
 //FIXME: try-catch
 
-//FIXME: delete if 401 gone or 404 when updating
-if ($res->getStatus() !== 200) {
+if ($res->getStatus() === 304) {
+    //not modified since last time
+    //FIXME: store "last try" time
+    exit(0);
+} else if ($res->getStatus() !== 200) {
+    //FIXME: delete if 401 gone or 404 when updating
     echo "Response code is not 200 but " . $res->getStatus() . ", stopping\n";
     //FIXME: update status
     exit(3);

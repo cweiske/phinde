@@ -25,7 +25,11 @@ class Crawler
 
     public function crawl($url)
     {
-        $res       = $this->fetch($url);
+        $res = $this->fetch($url);
+        if ($res === false) {
+            return;
+        }
+
         $linkInfos = $this->extractLinks($res);
         if ($this->showLinksOnly) {
             $this->showLinks($linkInfos);
@@ -36,13 +40,23 @@ class Crawler
 
     protected function fetch($url)
     {
+        $existingDoc = $this->es->get($url);
+
         $req = new HttpRequest($url);
         $req->setHeader(
             'accept',
             implode(',', array_keys(static::$supportedIndexTypes))
         );
+        if ($existingDoc) {
+            $nMoDate = strtotime($existingDoc->modate);
+            $req->setHeader('If-Modified-Since: ' . date('r', $nMoDate));
+        }
+
         $res = $req->send();
-        if ($res->getStatus() !== 200) {
+        if ($res->getStatus() === 304) {
+            //not modified since last time, so don't crawl again
+            return false;
+        } else if ($res->getStatus() !== 200) {
             throw new \Exception(
                 "Response code is not 200 but "
                 . $res->getStatus() . ", stopping"
