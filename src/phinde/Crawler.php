@@ -56,6 +56,7 @@ class Crawler
         $res = $req->send();
         if ($res->getStatus() === 304) {
             //not modified since last time, so don't crawl again
+            $this->log('Not modified since last fetch');
             return false;
         } else if ($res->getStatus() !== 200) {
             throw new \Exception(
@@ -140,6 +141,11 @@ class Crawler
     public function setShowLinksOnly($showLinksOnly)
     {
         $this->showLinksOnly = $showLinksOnly;
+    }
+
+    protected function log($msg)
+    {
+        echo $msg . "\n";
     }
 }
 ?>
