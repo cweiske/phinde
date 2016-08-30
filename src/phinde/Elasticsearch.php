@@ -79,6 +79,57 @@ class Elasticsearch
             );
         }
 
+        $qMust = array();//query parts for the MUST section
+
+        //modification date filters
+        if (preg_match('#after:([^ ]+)#', $query, $matches)) {
+            $dateAfter = $matches[1];
+            $query      = trim(str_replace($matches[0], '', $query));
+            $qMust[]    = array(
+                'range' => array(
+                    'modate' => array(
+                        'gt' => $dateAfter . '||/d',
+                    )
+                )
+            );
+        }
+        if (preg_match('#before:([^ ]+)#', $query, $matches)) {
+            $dateBefore = $matches[1];
+            $query      = trim(str_replace($matches[0], '', $query));
+            $qMust[]    = array(
+                'range' => array(
+                    'modate' => array(
+                        'lt' => $dateBefore . '||/d',
+                    )
+                )
+            );
+        }
+        if (preg_match('#date:([^ ]+)#', $query, $matches)) {
+            $dateExact = $matches[1];
+            $query      = trim(str_replace($matches[0], '', $query));
+            $qMust[]    = array(
+                'range' => array(
+                    'modate' => array(
+                        'gte' => $dateExact . '||/d',
+                        'lte' => $dateExact . '||/d',
+                    )
+                )
+            );
+        }
+
+        $qMust[] = array(
+            'query_string' => array(
+                'default_field' => '_all',
+                'default_operator' => 'AND',
+                'query' => $query
+            )
+        );
+        $qMust[] = array(
+            'term' => array(
+                'status' => 'indexed'
+            )
+        );
+
         if ($sort == 'date') {
             $sortCfg = array('modate' => array('order' => 'desc'));
         } else {
@@ -98,20 +149,7 @@ class Elasticsearch
             ),
             'query' => array(
                 'bool' => array(
-                    'must' => array(
-                        array(
-                            'query_string' => array(
-                                'default_field' => '_all',
-                                'default_operator' => 'AND',
-                                'query' => $query
-                            )
-                        ),
-                        array(
-                            'term' => array(
-                                'status' => 'indexed'
-                            )
-                        ),
-                    )
+                    'must' => $qMust
                 )
             ),
             'highlight' => array(

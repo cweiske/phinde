@@ -76,6 +76,12 @@
                 "tags": {
                     "type": "string",
                     "boost": 1.5
+                },
+                "crdate": {
+                    "type": "date"
+                },
+                "modate": {
+                    "type": "date"
                 }
             }
         }

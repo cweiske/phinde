@@ -19,6 +19,11 @@ Features
   - ``foo OR bar``
   - ``title:foo`` searches for ``foo`` only in the page title
 - Facets for tag, domain, language and type
+- Date search:
+
+  - ``before:2016-08-30`` - modification date before that day
+  - ``after:2016-08-30`` - modified after that day
+  - ``date::2016-08-30`` - exact modification day match
 - Site search
 
   - Query: ``foo bar site:example.org/dir/``

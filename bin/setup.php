@@ -1,7 +1,10 @@
 #!/usr/bin/env php
 <?php
 namespace phinde;
-//configure the elasticsearch index
+/**
+ * Configure the elasticsearch index.
+ * Throws away all data.
+ */
 require_once __DIR__ . '/../src/init.php';
 
 //delete old index
