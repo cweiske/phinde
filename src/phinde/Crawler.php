@@ -31,6 +31,7 @@ class Crawler
         }
 
         $linkInfos = $this->extractLinks($res);
+        $linkInfos = $this->filterLinks($linkInfos);
         if ($this->showLinksOnly) {
             $this->showLinks($linkInfos);
         } else {
@@ -78,25 +79,45 @@ class Crawler
         return $extractor->extract($res);
     }
 
-    protected function enqueue($linkInfos)
+    protected function filterLinks($linkInfos)
     {
+        $filteredLinkInfos = array();
         foreach ($linkInfos as $linkInfo) {
-            if ($this->es->isKnown($linkInfo->url)) {
-                continue;
-            }
             $allowed = Helper::isUrlAllowed($linkInfo->url);
             $crawl   = $allowed;
             $index   = $GLOBALS['phinde']['indexNonAllowed'] || $allowed;
 
-            if ($crawl || $index) {
+            if ($crawl && count($GLOBALS['phinde']['crawlBlacklist'])) {
+                foreach ($GLOBALS['phinde']['crawlBlacklist'] as $bl) {
+                    if (preg_match('#' . $bl . '#', $linkInfo->url)) {
+                        $crawl = false;
+                    }
+                }
+            }
+
+            $linkInfo->known = $this->es->isKnown($linkInfo->url);
+            $linkInfo->crawl = $crawl;
+            $linkInfo->index = $index;
+            $filteredLinkInfos[] = $linkInfo;
+        }
+        return $filteredLinkInfos;
+    }
+
+    protected function enqueue($linkInfos)
+    {
+        foreach ($linkInfos as $linkInfo) {
+            if ($linkInfo->known) {
+                continue;
+            }
+            if ($linkInfo->crawl || $linkInfo->index) {
                 $this->es->markQueued($linkInfo->url);
             }
-            if ($index) {
+            if ($linkInfo->index) {
                 $this->queue->addToIndex(
                     $linkInfo->url, $linkInfo->title, $linkInfo->source
                 );
             }
-            if ($allowed) {
+            if ($linkInfo->crawl) {
                 $this->queue->addToCrawl($linkInfo->url);
             }
         }
@@ -107,8 +128,11 @@ class Crawler
         foreach ($linkInfos as $linkInfo) {
             echo $linkInfo->url . "\n";
             if ($linkInfo->title) {
-                echo '  title: ' . $linkInfo->title . "\n";
+                echo '   title: ' . $linkInfo->title . "\n";
                 echo '  source: ' . $linkInfo->source . "\n";
+                echo '   known: ' . intval($linkInfo->known)
+                    . ', crawl: ' . intval($linkInfo->crawl)
+                    . ', index: ' . intval($linkInfo->index) . "\n";
             }
         }
     }

@@ -10,6 +10,9 @@ $GLOBALS['phinde'] = array(
     'blacklist' => array(
         'http://bad.example.org/'
     ),
+    //list of regexes for URLs that should not be crawled
+    'crawlBlacklist' => array(
+    ),
     //list of URLs that should be subscribed to with PubSubHubbub
     'subscriptions' => array(
         'http://www.example.org/feed',
