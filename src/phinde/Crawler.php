@@ -84,11 +84,19 @@ class Crawler
             if ($this->es->isKnown($linkInfo->url)) {
                 continue;
             }
-            $this->es->markQueued($linkInfo->url);
-            $this->queue->addToIndex(
-                $linkInfo->url, $linkInfo->title, $linkInfo->source
-            );
-            if (Helper::isUrlAllowed($linkInfo->url)) {
+            $allowed = Helper::isUrlAllowed($linkInfo->url);
+            $crawl   = $allowed;
+            $index   = $GLOBALS['phinde']['indexNonAllowed'] || $allowed;
+
+            if ($crawl || $index) {
+                $this->es->markQueued($linkInfo->url);
+            }
+            if ($index) {
+                $this->queue->addToIndex(
+                    $linkInfo->url, $linkInfo->title, $linkInfo->source
+                );
+            }
+            if ($allowed) {
                 $this->queue->addToCrawl($linkInfo->url);
             }
         }

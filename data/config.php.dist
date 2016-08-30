@@ -1,6 +1,7 @@
 <?php
 $GLOBALS['phinde'] = array(
     'elasticsearch' => 'http://127.0.0.1:9200/phinde/',
+    //whitelist of domains that shall be crawled
     'domains' => array(
         'www.example.org',
         'test.example.org'
@@ -15,5 +16,8 @@ $GLOBALS['phinde'] = array(
     ),
     //time in seconds after which URLs may be re-indexed
     'refreshtime' => 86400,
+    //if directly linked URLs shall be indexed, even if they are
+    // on a non-whitelisted domain
+    'indexNonAllowed' => true,
 );
 ?>
