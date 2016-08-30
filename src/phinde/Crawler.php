@@ -47,7 +47,7 @@ class Crawler
             'accept',
             implode(',', array_keys(static::$supportedIndexTypes))
         );
-        if ($existingDoc) {
+        if ($existingDoc && isset($existingDoc->modate)) {
             $nMoDate = strtotime($existingDoc->modate);
             $req->setHeader('If-Modified-Since: ' . date('r', $nMoDate));
         }
