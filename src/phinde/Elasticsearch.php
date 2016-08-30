@@ -70,6 +70,15 @@ class Elasticsearch
 
     public function search($query, $filters, $site, $page, $perPage, $sort)
     {
+        if (preg_match('#nick:([^ ]*)#', $query, $matches)) {
+            $authorName = $matches[1];
+            $query = str_replace(
+                'nick:' . $authorName,
+                'author.name:' . $authorName,
+                $query
+            );
+        }
+
         if ($sort == 'date') {
             $sortCfg = array('modate' => array('order' => 'desc'));
         } else {
