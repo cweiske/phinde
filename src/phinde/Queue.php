@@ -15,7 +15,7 @@ class Queue
     {
         echo "Queuing for indexing: $linkUrl\n";
         $this->gmclient->doBackground(
-            'phinde_index',
+            $GLOBALS['phinde']['queuePrefix'] . 'phinde_index',
             serialize(
                 array(
                     'url'    => $linkUrl,
@@ -36,7 +36,7 @@ class Queue
     {
         echo "Queuing for crawling: $linkUrl\n";
         $this->gmclient->doBackground(
-            'phinde_crawl',
+            $GLOBALS['phinde']['queuePrefix'] . 'phinde_crawl',
             serialize(
                 array(
                     'url' => $linkUrl

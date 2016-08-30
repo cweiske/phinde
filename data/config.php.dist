@@ -19,5 +19,8 @@ $GLOBALS['phinde'] = array(
     //if directly linked URLs shall be indexed, even if they are
     // on a non-whitelisted domain
     'indexNonAllowed' => true,
+    //prefix for the gearman queue names, needed when multiple instances
+    //are running in parallel
+    'queuePrefix' => '',
 );
 ?>

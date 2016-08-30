@@ -32,7 +32,7 @@ $gmworker->addServer('127.0.0.1');
 
 if (isset($queues['crawl'])) {
     $gmworker->addFunction(
-        'phinde_crawl',
+        $GLOBALS['phinde']['queuePrefix'] . 'phinde_crawl',
         function(\GearmanJob $job) {
             $data = unserialize($job->workload());
             echo "-- Crawling " . $data['url'] . "\n";
@@ -42,7 +42,7 @@ if (isset($queues['crawl'])) {
 }
 if (isset($queues['index'])) {
     $gmworker->addFunction(
-        'phinde_index',
+        $GLOBALS['phinde']['queuePrefix'] . 'phinde_index',
         function(\GearmanJob $job) {
             $data = unserialize($job->workload());
             echo "-- Indexing " . $data['url'] . "\n";
