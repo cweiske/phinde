@@ -163,6 +163,7 @@ render(
         'sort' => $sort,
         'urlSortRelevance' => $urlSortRelevance,
         'urlSortDate' => $urlSortDate,
+        'hitTemplate' => 'search/' . $GLOBALS['phinde']['hitTemplate'],
     )
 );
 ?>

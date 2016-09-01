@@ -28,5 +28,7 @@ $GLOBALS['phinde'] = array(
     //show the full text content in the results
     // useful for chat logs in which every line is its own document
     'showFullContent' => false,
+    //search result "hit" template file
+    'hitTemplate' => 'hit.htm',
 );
 ?>

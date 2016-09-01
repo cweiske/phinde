@@ -1,0 +1,22 @@
+{% set doc = hit._source %}
+<li class="hit hit-chat">
+ <span class="text">
+  {{doc.htmlText|raw}}
+ </span>
+ <br/>
+ <span class="meta">
+  {% if doc.author.name %}
+  <em>
+   {% if doc.author.url %}
+   <a href="{{doc.author.url}}">{{doc.author.name}}</a>
+   {% else %}
+   {{doc.author.name}}
+   {% endif %}
+  </em>
+  at
+  {% endif %}
+  {% if doc.modate %}
+  <a href="{{doc.extra.cleanUrl}}" class="date">{{doc.modate|date("Y-m-d H:i")}}</a>
+  {% endif %}
+ </span>
+</li>

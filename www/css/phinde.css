@@ -32,3 +32,13 @@
     margin-top: 1ex;
     margin-bottom: 2ex;
 }
+
+.hit-chat .meta {
+    margin-left: 3ex;
+}
+.hit-chat .date {
+    color: inherit;
+}
+.hit-chat .meta {
+    opacity: 0.5;
+}
