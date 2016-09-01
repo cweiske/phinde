@@ -35,8 +35,8 @@ class Elasticsearch
                 )
             )
         );
-        $res = json_decode($r->send()->getBody());
-        return $res->exists;
+        $status = $r->send()->getStatus();
+        return $status !== 404;
     }
 
     public function get($url)
