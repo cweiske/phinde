@@ -8,7 +8,7 @@ class Html
 {
     public function extract(\HTTP_Request2_Response $res)
     {
-        $url = $res->getEffectiveUrl();
+        $url = Helper::removeAnchor($res->getEffectiveUrl());
 
         $linkInfos = array();
 

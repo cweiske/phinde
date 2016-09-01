@@ -31,6 +31,12 @@ class Helper
         return 'http://' . $url;
     }
 
+    public static function removeAnchor($url)
+    {
+        $parts = explode('#', $url, 2);
+        return $parts[0];
+    }
+
     public static function sanitizeTitle($str)
     {
         return trim(
