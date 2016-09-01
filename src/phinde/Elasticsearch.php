@@ -136,6 +136,11 @@ class Elasticsearch
             $sortCfg = array();
         }
 
+        $contentMatchSize = 100;
+        if ($GLOBALS['phinde']['showFullContent']) {
+            $contentMatchSize = 999999;
+        }
+
         $r = new Elasticsearch_Request(
             $this->baseUrl . 'document/_search',
             \HTTP_Request2::METHOD_GET
@@ -168,6 +173,8 @@ class Elasticsearch
                     'text' => array(
                         'require_field_match' => false,
                         'number_of_fragments' => 1,
+                        'fragment_size' => $contentMatchSize,
+                        'no_match_size' => $contentMatchSize,
                     ),
                 )
             ),

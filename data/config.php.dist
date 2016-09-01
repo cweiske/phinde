@@ -25,5 +25,8 @@ $GLOBALS['phinde'] = array(
     //prefix for the gearman queue names, needed when multiple instances
     //are running in parallel
     'queuePrefix' => '',
+    //show the full text content in the results
+    // useful for chat logs in which every line is its own document
+    'showFullContent' => false,
 );
 ?>
