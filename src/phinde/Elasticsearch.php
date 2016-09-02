@@ -52,13 +52,14 @@ class Elasticsearch
 
     public function search($query, $filters, $site, $page, $perPage, $sort)
     {
-        if (preg_match('#nick:([^ ]*)#', $query, $matches)) {
-            $authorName = $matches[1];
-            $query = str_replace(
-                'nick:' . $authorName,
-                'author.name:' . $authorName,
-                $query
-            );
+        if (preg_match_all('#nick:([^ ]*)#', $query, $matches)) {
+            foreach ($matches[1] as $authorName) {
+                $query = str_replace(
+                    'nick:' . $authorName,
+                    'author.name:' . $authorName,
+                    $query
+                );
+            }
         }
 
         $qMust = array();//query parts for the MUST section
