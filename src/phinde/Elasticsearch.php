@@ -10,33 +10,15 @@ class Elasticsearch
         $this->baseUrl = $baseUrl;
     }
 
-    /**
-     * @link https://www.elastic.co/guide/en/elasticsearch/guide/current/_finding_exact_values.html
-     */
     public function isKnown($url)
     {
         $r = new Elasticsearch_Request(
-            $this->baseUrl . 'document/_search/exists',
-            \HTTP_Request2::METHOD_GET
+            $this->baseUrl . 'document/' . rawurlencode($url),
+            \HTTP_Request2::METHOD_HEAD
         );
         $r->allow404 = true;
-        $r->setBody(
-            json_encode(
-                array(
-                    'query' => array(
-                        'filtered' => array(
-                            'filter' => array(
-                                'term' => array(
-                                    'url' => $url
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        );
-        $status = $r->send()->getStatus();
-        return $status !== 404;
+        $res = $r->send();
+        return $res->getStatus() == 200;
     }
 
     public function get($url)
