@@ -65,5 +65,17 @@ class Helper
         return $prot . '://' . $_SERVER['HTTP_HOST'] . $path;
     }
 
+    static $timer = [];
+
+    public static function start($timer = 'timer')
+    {
+        static::$timer[$timer] = microtime(true);
+    }
+
+    public static function stop($timer = 'timer')
+    {
+        $diff = microtime(true) - static::$timer[$timer];
+        echo '+timer: ' . number_format($diff, 3) . 'ms ' . $timer . "\n";
+    }
 }
 ?>
