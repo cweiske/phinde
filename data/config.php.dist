@@ -1,5 +1,7 @@
 <?php
 $GLOBALS['phinde'] = array(
+    //name of the app in the frontend
+    'apptitle' => 'website search',
     'elasticsearch' => 'http://127.0.0.1:9200/phinde/',
     //whitelist of domains that shall be crawled
     'domains' => array(

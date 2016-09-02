@@ -26,7 +26,7 @@ function render($tplname, $vars = array(), $return = false)
     if (!isset($vars['htmlhelper'])) {
         //$vars['htmlhelper'] = new HtmlHelper();
     }
-    $vars['apptitle'] = 'cweiske.de search';
+    $vars['apptitle'] = $GLOBALS['phinde']['apptitle'];
     $vars['baseUrl'] = '/';
 
     $template = $GLOBALS['twig']->loadTemplate($tplname . '.htm');
