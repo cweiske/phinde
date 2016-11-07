@@ -11,7 +11,7 @@ class Crawler
      */
     protected $showLinksOnly = false;
 
-    static $supportedIndexTypes = array(
+    static $supportedTypes = array(
         'application/atom+xml'  => '\\phinde\\LinkExtractor\\Atom',
         'application/xhtml+xml' => '\\phinde\\LinkExtractor\\Html',
         'text/html'             => '\\phinde\\LinkExtractor\\Html',
@@ -23,59 +23,28 @@ class Crawler
         $this->queue = new Queue();
     }
 
-    public function crawl($url)
+    public function run(Retrieved $retrieved)
     {
-        $res = $this->fetch($url);
-        if ($res === false) {
-            return;
-        }
-
-        $linkInfos = $this->extractLinks($res);
+        $linkInfos = $this->extractLinks($retrieved->httpRes);
         $linkInfos = $this->filterLinks($linkInfos);
         if ($this->showLinksOnly) {
             $this->showLinks($linkInfos);
+            return false;
         } else {
             $this->enqueue($linkInfos);
+            return true;
         }
-    }
-
-    protected function fetch($url)
-    {
-        $existingDoc = $this->es->get($url);
-
-        $req = new HttpRequest($url);
-        $req->setHeader(
-            'accept',
-            implode(',', array_keys(static::$supportedIndexTypes))
-        );
-        if ($existingDoc && isset($existingDoc->modate)) {
-            $nMoDate = strtotime($existingDoc->modate);
-            $req->setHeader('If-Modified-Since: ' . date('r', $nMoDate));
-        }
-
-        $res = $req->send();
-        if ($res->getStatus() === 304) {
-            //not modified since last time, so don't crawl again
-            $this->log('Not modified since last fetch');
-            return false;
-        } else if ($res->getStatus() !== 200) {
-            throw new \Exception(
-                "Response code is not 200 but "
-                . $res->getStatus() . ", stopping"
-            );
-        }
-        return $res;
     }
 
     protected function extractLinks(\HTTP_Request2_Response $res)
     {
         $mimetype = explode(';', $res->getHeader('content-type'))[0];
-        if (!isset(static::$supportedIndexTypes[$mimetype])) {
+        if (!isset(static::$supportedTypes[$mimetype])) {
             echo "MIME type not supported for indexing: $mimetype\n";
             return array();
         }
 
-        $class = static::$supportedIndexTypes[$mimetype];
+        $class = static::$supportedTypes[$mimetype];
         $extractor = new $class();
         return $extractor->extract($res);
     }
@@ -112,14 +81,16 @@ class Crawler
             }
             if ($linkInfo->crawl || $linkInfo->index) {
                 $this->es->markQueued($linkInfo->url);
-            }
-            if ($linkInfo->index) {
-                $this->queue->addToIndex(
-                    $linkInfo->url, $linkInfo->title, $linkInfo->source
+                $actions = array();
+                if ($linkInfo->index) {
+                    $actions[] = 'index';
+                }
+                if ($linkInfo->crawl) {
+                    $actions[] = 'crawl';
+                }
+                $this->queue->addToProcessList(
+                    $linkInfo->url, $actions
                 );
-            }
-            if ($linkInfo->crawl) {
-                $this->queue->addToCrawl($linkInfo->url);
             }
         }
     }
@@ -141,11 +112,6 @@ class Crawler
     public function setShowLinksOnly($showLinksOnly)
     {
         $this->showLinksOnly = $showLinksOnly;
-    }
-
-    protected function log($msg)
-    {
-        echo $msg . "\n";
     }
 }
 ?>

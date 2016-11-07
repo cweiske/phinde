@@ -10,10 +10,15 @@ class Elasticsearch
         $this->baseUrl = $baseUrl;
     }
 
+    public static function getDocId($url)
+    {
+        return hash('sha256', $url);
+    }
+
     public function isKnown($url)
     {
         $r = new Elasticsearch_Request(
-            $this->baseUrl . 'document/' . rawurlencode($url),
+            $this->baseUrl . 'document/' . static::getDocId($url),
             \HTTP_Request2::METHOD_HEAD
         );
         $r->allow404 = true;
@@ -24,7 +29,7 @@ class Elasticsearch
     public function get($url)
     {
         $r = new Elasticsearch_Request(
-            $this->baseUrl . 'document/' . rawurlencode($url),
+            $this->baseUrl . 'document/' . static::getDocId($url),
             \HTTP_Request2::METHOD_GET
         );
         $r->allow404 = true;
@@ -39,12 +44,15 @@ class Elasticsearch
     public function markQueued($url)
     {
         $r = new Elasticsearch_Request(
-            $this->baseUrl . 'document/' . rawurlencode($url),
+            $this->baseUrl . 'document/' . static::getDocId($url),
             \HTTP_Request2::METHOD_PUT
         );
-        $doc = array(
-            'status' => 'queued',
-            'url' => $url
+        $doc = (object) array(
+            'url' => $url,
+            'status' => (object) array(
+                'processed' => null,
+                'findable'  => false,
+            )
         );
         $r->setBody(json_encode($doc));
         $r->send();
@@ -109,12 +117,12 @@ class Elasticsearch
         );
         $qMust[] = array(
             'term' => array(
-                'status' => 'indexed'
+                'status.findable' => true
             )
         );
 
         if ($sort == 'date') {
-            $sortCfg = array('modate' => array('order' => 'desc'));
+            $sortCfg = array('status.modate' => array('order' => 'desc'));
         } else {
             $sortCfg = array();
         }
@@ -133,7 +141,7 @@ class Elasticsearch
                 'url',
                 'title',
                 'author',
-                'modate',
+                'status.modate',
             ),
             'query' => array(
                 'bool' => array(

@@ -27,8 +27,8 @@
      <title>{{doc.title}}</title>
      <link href="{{doc.url}}"/>
      <id>{{doc.url}}</id>
-     {% if doc.modate %}
-     <updated>{{doc.modate|date('c')}}</updated>
+     {% if doc.status.modate %}
+     <updated>{{doc.status.modate|date('c')}}</updated>
      {% endif %}
      <content type="text">{{doc.htmlText|striptags}}</content>
     </entry>

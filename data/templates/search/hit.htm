@@ -16,7 +16,7 @@
  <br/><tt class="url" title="{{doc.extra.cleanUrl}}">{{ellipsis(doc.extra.cleanUrl, 60)}}</tt>
  <span class="extract">
   <br/>
-  {% if doc.modate %}
+  {% if doc.status.modate %}
   <span class="date">{{doc.extra.day|date("Y-m-d")}}</span>
   {% endif %}
   {{doc.htmlText|raw}}

@@ -1,5 +1,11 @@
 {
-    "status": "indexed",
+    "status": {
+        "processed": '2016-10-06T05:13:42+02:00',
+        "code": 200,
+        "location": "",
+        "crdate": "2016-01-30T12:23:42+01:00",
+        "modate": "2016-01-30T12:23:42+01:00"
+    },
     "type": "html",
     "subtype": "rsvp",
     "mimetype": "application/xhtml+xml",
@@ -38,6 +44,4 @@
         "Another paragraph in the text"
     ],
     "tags": ["example", "test", "documentation"],
-    "crdate": "2016-01-30T12:23:42+01:00",
-    "modate": "2016-01-30T12:23:42+01:00",
 }

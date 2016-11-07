@@ -11,40 +11,22 @@ class Queue
         $this->gmclient->addServer('127.0.0.1');
     }
 
-    public function addToIndex($linkUrl, $linkTitle, $sourceUrl)
+    public function addToProcessList($linkUrl, $actions)
     {
-        echo "Queuing for indexing: $linkUrl\n";
+        echo "Queuing for processing: $linkUrl"
+            . ' (' . implode(',', $actions) . ')'
+            . "\n";
         $this->gmclient->doBackground(
-            $GLOBALS['phinde']['queuePrefix'] . 'phinde_index',
+            $GLOBALS['phinde']['queuePrefix'] . 'phinde_process',
             serialize(
                 array(
-                    'url'    => $linkUrl,
-                    'title'  => $linkTitle,
-                    'source' => $sourceUrl
+                    'url'     => $linkUrl,
+                    'actions' => $actions,
                 )
             )
         );
         if ($this->gmclient->returnCode() != GEARMAN_SUCCESS) {
-            echo 'Error queueing URL indexing for '
-                . $linkUrl . "\n"
-                . 'Error code: ' . $this->gmclient->returnCode() . "\n";
-            exit(2);
-        }
-    }
-
-    public function addToCrawl($linkUrl)
-    {
-        echo "Queuing for crawling: $linkUrl\n";
-        $this->gmclient->doBackground(
-            $GLOBALS['phinde']['queuePrefix'] . 'phinde_crawl',
-            serialize(
-                array(
-                    'url' => $linkUrl
-                )
-            )
-        );
-        if ($this->gmclient->returnCode() != GEARMAN_SUCCESS) {
-            echo 'Error queueing URL crawling for '
+            echo 'Error queueing URL processing for '
                 . $linkUrl . "\n"
                 . 'Error code: ' . $this->gmclient->returnCode() . "\n";
             exit(2);

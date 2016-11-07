@@ -115,8 +115,8 @@ foreach ($res->hits->hits as &$hit) {
 
     $doc->extra = new \stdClass();
     $doc->extra->cleanUrl = preg_replace('#^.*://#', '', $doc->url);
-    if (isset($doc->modate)) {
-        $doc->extra->day = substr($doc->modate, 0, 10);
+    if (isset($doc->status->modate)) {
+        $doc->extra->day = substr($doc->status->modate, 0, 10);
     }
 }
 

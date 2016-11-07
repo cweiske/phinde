@@ -3,8 +3,27 @@
         "document": {
             "properties": {
                 "status": {
-                    "type": "string",
-                    "index": "not_analyzed"
+                    "type": "object",
+                    "properties": {
+                        "code": {
+                            "type": "integer"
+                        },
+                        "location": {
+                            "type": "string"
+                        },
+                        "processed": {
+                            "type": "date"
+                        },
+                        "crdate": {
+                            "type": "date"
+                        },
+                        "modate": {
+                            "type": "date"
+                        },
+                        "findable": {
+                            "type": "boolean"
+                        }
+                    }
                 },
                 "type": {
                     "type": "string",
@@ -76,12 +95,6 @@
                 "tags": {
                     "type": "string",
                     "boost": 1.5
-                },
-                "crdate": {
-                    "type": "date"
-                },
-                "modate": {
-                    "type": "date"
                 }
             }
         }

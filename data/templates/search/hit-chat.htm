@@ -15,8 +15,8 @@
   </em>
   at
   {% endif %}
-  {% if doc.modate %}
-  <a href="{{doc.url}}" class="date">{{doc.modate|date("Y-m-d H:i")}}</a>
+  {% if doc.status.modate %}
+  <a href="{{doc.url}}" class="date">{{doc.status.modate|date("Y-m-d H:i")}}</a>
   {% endif %}
  </span>
 </li>
