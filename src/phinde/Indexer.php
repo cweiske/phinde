@@ -21,10 +21,8 @@ class Indexer
         }
 
         if ($esDoc === null) {
-            $esDoc = new \stdClass();
-        }
-        if (!isset($esDoc->status)) {
-            $esDoc->status = new \stdClass();
+            $esDoc = Helper::baseDoc($url);
+            $retrieved->esDoc = $esDoc;
         }
 
         //FIXME: update index only if changed since last index time
@@ -52,8 +50,8 @@ class Indexer
             $robots = $meta->attributes->getNamedItem('content')->textContent;
             foreach (explode(',', $robots) as $value) {
                 if (trim($value) == 'noindex') {
-                    echo "URL does not want to be indexed: $url\n";
-                    exit(0);
+                    $esDoc->status->findable = false;
+                    return true;
                 }
             }
         }
@@ -188,7 +186,6 @@ class Indexer
 
         //var_dump($esDoc);die();
 
-        $retrieved->esDoc = $esDoc;
         return true;
     }
 

@@ -77,5 +77,14 @@ class Helper
         $diff = microtime(true) - static::$timer[$timer];
         echo '+timer: ' . number_format($diff, 3) . 'ms ' . $timer . "\n";
     }
+
+    public static function baseDoc($url)
+    {
+        $esDoc = new \stdClass();
+        $esDoc->status = new \stdClass();
+        $esDoc->url = $url;
+        $esDoc->schemalessUrl = Helper::noSchema($url);
+        return $esDoc;
+    }
 }
 ?>

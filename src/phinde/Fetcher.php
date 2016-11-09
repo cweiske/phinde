@@ -52,7 +52,7 @@ class Fetcher
             );
         }
 
-        $effUrl = $res->getEffectiveUrl();
+        $effUrl = Helper::removeAnchor($res->getEffectiveUrl());
         if ($effUrl != $url) {
             $this->storeRedirect($url, $effUrl);
             $url = $effUrl;
@@ -69,11 +69,11 @@ class Fetcher
 
     protected function storeRedirect($url, $target)
     {
-        $esDoc = new \stdClass();
+        $esDoc = Helper::baseDoc($url);
         $esDoc->status = (object) array(
-            'location' => $target
+            'location' => $target,
+            'findable' => false,
         );
-        $esDoc->url = $url;
         $this->storeDoc($url, $esDoc);
     }
 
