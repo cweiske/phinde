@@ -2,19 +2,20 @@
 {% if pager.numPages > 1 %}
 <div class="pagination pagination-centered">
 <ul>
- {% if links.first %}
- <li>
-  {{links.first|raw}}
- </li>
- {% else %}
- <li class="disabled"><a href="#">first</a></li>
- {% endif %}
  {% if links.back %}
  <li>
   {{links.back|raw}}
  </li>
  {% else %}
  <li class="disabled"><a href="#">« prev</a></li>
+ {% endif %}
+
+ {% if links.first %}
+ <li>
+  {{links.first|raw}}
+ </li>
+ {% else %}
+ <li class="disabled"><a href="#">first</a></li>
  {% endif %}
 
  {% for page in links.pages %}
@@ -29,19 +30,20 @@
   {% endif %}
  {% endfor %}
 
- {% if links.next %}
- <li>
-  {{links.next|raw}}
- </li>
- {% else %}
- <li class="disabled"><a href="#">next »</a></li>
- {% endif %}
  {% if links.last %}
  <li>
   {{links.last|raw}}
  </li>
  {% else %}
  <li class="disabled"><a href="#">last</a></li>
+ {% endif %}
+
+ {% if links.next %}
+ <li>
+  {{links.next|raw}}
+ </li>
+ {% else %}
+ <li class="disabled"><a href="#">next »</a></li>
  {% endif %}
 </ul>
 </div>
