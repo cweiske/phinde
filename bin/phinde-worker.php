@@ -13,9 +13,10 @@ $gmworker->addFunction(
     $GLOBALS['phinde']['queuePrefix'] . 'phinde_process',
     function(\GearmanJob $job) {
         $data = unserialize($job->workload());
-        echo "-- Processing " . $data['url']
+        Log::info(
+            "-- Processing " . $data['url']
             . ' (' . implode(',', $data['actions']) . ')'
-            . "\n";
+        );
         passthru(
             './process.php ' . escapeshellarg($data['url'])
             . ' ' . implode(' ', $data['actions'])
@@ -26,7 +27,7 @@ $gmworker->addFunction(
 $gmworker->addFunction(
     $GLOBALS['phinde']['queuePrefix'] . 'phinde_quit',
     function(\GearmanJob $job) {
-        echo "Got exit job\n";
+        Log::info('Got exit job');
         $job->sendComplete('');
         exit(0);
     }
@@ -34,7 +35,7 @@ $gmworker->addFunction(
 
 while ($gmworker->work()) {
     if ($gmworker->returnCode() != GEARMAN_SUCCESS) {
-        echo 'Error running job: ' . $gmworker->returnCode() . "\n";
+        Log::error('Error running job: ' . $gmworker->returnCode());
         break;
     }
 }

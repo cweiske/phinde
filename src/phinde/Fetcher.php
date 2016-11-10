@@ -43,7 +43,7 @@ class Fetcher
         $res = $req->send();
         if ($res->getStatus() === 304) {
             //not modified since last time, so don't crawl again
-            echo "Not modified since last fetch\n";
+            Log::info("Not modified since last fetch");
             return false;
         } else if ($res->getStatus() !== 200) {
             throw new \Exception(
@@ -79,7 +79,7 @@ class Fetcher
 
     public function storeDoc($url, $esDoc)
     {
-        echo "Store $url\n";
+        Log::info("Store $url");
         $esDoc->status->processed = gmdate('c');
         $r = new Elasticsearch_Request(
             $GLOBALS['phinde']['elasticsearch'] . 'document/'

@@ -16,7 +16,7 @@ class Indexer
 
         $mimetype = explode(';', $res->getHeader('content-type'))[0];
         if (!in_array($mimetype, static::$supportedTypes)) {
-            echo "MIME type not supported for indexing: $mimetype\n";
+            Log::info("MIME type not supported for indexing: $mimetype");
             return false;
         }
 

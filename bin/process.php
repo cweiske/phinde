@@ -54,7 +54,7 @@ $url = Helper::addSchema($url);
 $urlObj = new \Net_URL2($url);
 $url = $urlObj->getNormalizedURL();
 if (!Helper::isUrlAllowed($url)) {
-    echo "Domain is not allowed; not crawling\n";
+    Log::error("Domain is not allowed; not crawling");
     exit(2);
 }
 
@@ -78,7 +78,7 @@ try {
 
     $update = false;
     foreach ($actions as $key => $action) {
-        echo "step: $key\n";
+        Log::info("step: $key");
         $update |= $action->run($retrieved);
     }
 
@@ -86,10 +86,10 @@ try {
         //FIXME: update index if it exists already
         $fetcher->storeDoc($retrieved->url, $retrieved->esDoc);
     } else {
-        echo "Not updating\n";
+        Log::info("Not updating");
     }
 } catch (\Exception $e) {
-    echo $e->getMessage() . "\n";
+    Log::error($e->getMessage());
     exit(10);
 }
 ?>

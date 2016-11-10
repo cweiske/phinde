@@ -40,7 +40,7 @@ class Crawler
     {
         $mimetype = explode(';', $res->getHeader('content-type'))[0];
         if (!isset(static::$supportedTypes[$mimetype])) {
-            echo "MIME type not supported for indexing: $mimetype\n";
+            Log::info("MIME type not supported for crawling: $mimetype");
             return array();
         }
 
@@ -98,13 +98,15 @@ class Crawler
     protected function showLinks($linkInfos)
     {
         foreach ($linkInfos as $linkInfo) {
-            echo $linkInfo->url . "\n";
+            Log::msg($linkInfo->url);
             if ($linkInfo->title) {
-                echo '   title: ' . $linkInfo->title . "\n";
-                echo '  source: ' . $linkInfo->source . "\n";
-                echo '   known: ' . intval($linkInfo->known)
+                Log::msg('   title: ' . $linkInfo->title);
+                Log::msg('  source: ' . $linkInfo->source);
+                Log::msg(
+                    '   known: ' . intval($linkInfo->known)
                     . ', crawl: ' . intval($linkInfo->crawl)
-                    . ', index: ' . intval($linkInfo->index) . "\n";
+                    . ', index: ' . intval($linkInfo->index)
+                );
             }
         }
     }

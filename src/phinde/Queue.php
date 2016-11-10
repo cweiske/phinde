@@ -13,9 +13,11 @@ class Queue
 
     public function addToProcessList($linkUrl, $actions)
     {
-        echo "Queuing for processing: $linkUrl"
+        Log::info(
+            "Queuing for processing: $linkUrl"
             . ' (' . implode(',', $actions) . ')'
-            . "\n";
+        );
+
         $this->gmclient->doBackground(
             $GLOBALS['phinde']['queuePrefix'] . 'phinde_process',
             serialize(
@@ -26,9 +28,11 @@ class Queue
             )
         );
         if ($this->gmclient->returnCode() != GEARMAN_SUCCESS) {
-            echo 'Error queueing URL processing for '
+            Log::error(
+                'Error queueing URL processing for '
                 . $linkUrl . "\n"
-                . 'Error code: ' . $this->gmclient->returnCode() . "\n";
+                . 'Error code: ' . $this->gmclient->returnCode()
+            );
             exit(2);
         }
     }

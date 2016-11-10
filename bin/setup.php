@@ -9,7 +9,7 @@ require_once __DIR__ . '/../src/init.php';
 
 $json = file_get_contents(__DIR__ . '/../data/elasticsearch-mapping.json');
 if (json_decode($json) === null) {
-    echo "Error: Schema JSON is broken\n";
+    Log::error("Error: Schema JSON is broken");
     chdir(__DIR__ . '/../');
     passthru('json_pp -t null < data/elasticsearch-mapping.json');
     exit(1);

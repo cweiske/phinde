@@ -19,6 +19,8 @@ $GLOBALS['phinde'] = array(
     'subscriptions' => array(
         'http://www.example.org/feed',
     ),
+    //verbose output
+    'debug' => true,
     //time in seconds after which URLs may be re-indexed
     'refreshtime' => 86400,
     //if directly linked URLs shall be indexed, even if they are
