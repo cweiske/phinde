@@ -23,6 +23,15 @@ $gmworker->addFunction(
     }
 );
 
+$gmworker->addFunction(
+    $GLOBALS['phinde']['queuePrefix'] . 'phinde_quit',
+    function(\GearmanJob $job) {
+        echo "Got exit job\n";
+        $job->sendComplete('');
+        exit(0);
+    }
+);
+
 while ($gmworker->work()) {
     if ($gmworker->returnCode() != GEARMAN_SUCCESS) {
         echo 'Error running job: ' . $gmworker->returnCode() . "\n";
