@@ -19,7 +19,10 @@ function human_filesize($bytes, $decimals = 2)
         . ' ' . @$size[$factor];
 }
 
-$esStatus['size_human'] = human_filesize($esStatus['size']);
+$esStatus['size_human']      = human_filesize($esStatus['size']);
+$esStatus['documents_human'] = number_format(
+    $esStatus['documents'], 0, '.', ' '
+);
 
 render(
     'status',

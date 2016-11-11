@@ -4,7 +4,7 @@
  <meta name="robots" value="noindex,nofollow"/>
 {% endblock %}
 
-{%block title %}phinde status{% endblock %}
+{%block title %}phinde status - {% endblock %}
 
 {% block maincontent %}
 <div class="container">
@@ -24,7 +24,7 @@
   <tr>
    <td rowspan="2">Elasticsearch</td>
    <td>Documents</td>
-   <td style="text-align: right">{{esStatus.documents}}</td>
+   <td style="text-align: right">{{esStatus.documents_human}}</td>
   </tr>
   <tr>
    <td>Index size</td>
