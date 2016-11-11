@@ -3,15 +3,28 @@ namespace phinde;
 require 'www-header.php';
 
 $es = new Elasticsearch($GLOBALS['phinde']['elasticsearch']);
-$esDocs = $es->countDocuments();
+$esStatus = $es->getIndexStatus();
 
 $queue = new Queue();
 $gearStatus = $queue->getServerStatus();
 
+/**
+ * @link http://jeffreysambells.com/2012/10/25/human-readable-filesize-php
+ */
+function human_filesize($bytes, $decimals = 2)
+{
+    $size = array('B','kiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB');
+    $factor = floor((strlen($bytes) - 1) / 3);
+    return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor))
+        . ' ' . @$size[$factor];
+}
+
+$esStatus['size_human'] = human_filesize($esStatus['size']);
+
 render(
     'status',
     array(
-        'esDocs' => $esDocs,
+        'esStatus'   => $esStatus,
         'gearStatus' => $gearStatus,
     )
 );

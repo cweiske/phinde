@@ -58,14 +58,18 @@ class Elasticsearch
         $r->send();
     }
 
-    public function countDocuments()
+    public function getIndexStatus()
     {
         $r = new Elasticsearch_Request(
-            $this->baseUrl . 'document/_count',
+            $this->baseUrl . '_stats/docs,store',
             \HTTP_Request2::METHOD_GET
         );
         $res = $r->send();
-        return json_decode($res->getBody())->count;
+        $data = json_decode($res->getBody());
+        return array(
+            'documents' => $data->_all->total->docs->count,
+            'size'      => $data->_all->total->store->size_in_bytes,
+        );
     }
 
     public function search($query, $filters, $site, $page, $perPage, $sort)

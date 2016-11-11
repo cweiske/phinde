@@ -15,26 +15,33 @@
 <table class="table table-striped">
  <thead>
   <tr>
+   <th>Group</th>
    <th>Item</th>
-   <th>Number</th>
+   <th style="text-align: right">Number</th>
   </tr>
  </thead>
  <tbody>
   <tr>
-   <td>Elasticsearch documents</td>
-   <td>{{esDocs}}</td>
+   <td rowspan="2">Elasticsearch</td>
+   <td>Documents</td>
+   <td style="text-align: right">{{esStatus.documents}}</td>
   </tr>
   <tr>
+   <td>Index size</td>
+   <td style="text-align: right">{{esStatus.size_human}}</td>
+  </tr>
+  <tr>
+   <td rowspan="3">Gearman</td>
    <td>Open tasks</td>
-   <td>{{gearStatus.tasks}}</td>
+   <td style="text-align: right">{{gearStatus.tasks}}</td>
   </tr>
   <tr>
    <td>Tasks being processed</td>
-   <td>{{gearStatus.processing}}</td>
+   <td style="text-align: right">{{gearStatus.processing}}</td>
   </tr>
   <tr>
    <td>Task workers</td>
-   <td>{{gearStatus.workers}}</td>
+   <td style="text-align: right">{{gearStatus.workers}}</td>
   </tr>
  </tbody>
 </table>
