@@ -58,6 +58,16 @@ class Elasticsearch
         $r->send();
     }
 
+    public function countDocuments()
+    {
+        $r = new Elasticsearch_Request(
+            $this->baseUrl . 'document/_count',
+            \HTTP_Request2::METHOD_GET
+        );
+        $res = $r->send();
+        return json_decode($res->getBody())->count;
+    }
+
     public function search($query, $filters, $site, $page, $perPage, $sort)
     {
         if (preg_match_all('#nick:([^ ]*)#', $query, $matches)) {

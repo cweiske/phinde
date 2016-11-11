@@ -9,6 +9,7 @@ class Queue
     {
         $this->gmclient = new \GearmanClient();
         $this->gmclient->addServer('127.0.0.1');
+        $this->queueName = $GLOBALS['phinde']['queuePrefix'] . 'phinde_process';
     }
 
     public function addToProcessList($linkUrl, $actions)
@@ -19,7 +20,7 @@ class Queue
         );
 
         $this->gmclient->doBackground(
-            $GLOBALS['phinde']['queuePrefix'] . 'phinde_process',
+            $this->queueName,
             serialize(
                 array(
                     'url'     => $linkUrl,
@@ -35,6 +36,24 @@ class Queue
             );
             exit(2);
         }
+    }
+
+    public function getServerStatus()
+    {
+        $cmd = 'gearadmin --status'
+            . '| grep ' . escapeshellarg($this->queueName);
+        $line = exec($cmd);
+
+        $parts = preg_split('#\s+#', $line);
+        if (count($parts) !== 4) {
+            throw new \Exception('gearadmin status line does not have 4 parts');
+        }
+
+        return array(
+            'tasks'      => $parts[1],
+            'processing' => $parts[2],
+            'workers'    => $parts[3],
+        );
     }
 }
 ?>

@@ -1,0 +1,45 @@
+{% extends "base.htm" %}
+
+{% block meta %}
+ <meta name="robots" value="noindex,nofollow"/>
+{% endblock %}
+
+{%block title %}phinde status{% endblock %}
+
+{% block maincontent %}
+<div class="container">
+ <div class="row">
+  <div class="span6 offset3">
+
+<h1>phinde status</h1>
+<table class="table table-striped">
+ <thead>
+  <tr>
+   <th>Item</th>
+   <th>Number</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>Elasticsearch documents</td>
+   <td>{{esDocs}}</td>
+  </tr>
+  <tr>
+   <td>Open tasks</td>
+   <td>{{gearStatus.tasks}}</td>
+  </tr>
+  <tr>
+   <td>Tasks being processed</td>
+   <td>{{gearStatus.processing}}</td>
+  </tr>
+  <tr>
+   <td>Task workers</td>
+   <td>{{gearStatus.workers}}</td>
+  </tr>
+ </tbody>
+</table>
+
+  </div>
+ </div>
+</div>
+{% endblock %}
