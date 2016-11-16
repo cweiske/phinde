@@ -6,6 +6,13 @@
     margin-bottom: 1ex;
 }
 
+/* bootstrap 2.1.1 does not have this style, 2.3.2 would have it */
+.pagination ul > .active > a,
+.pagination ul > .active > a:hover {
+    background-color: #0088cc;
+    color: #FFF;
+}
+
 .hits {
     list-style-type: none;
     margin-left: 0px;
