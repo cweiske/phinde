@@ -35,11 +35,16 @@ if (preg_match('#site:([^ ]*)#', $query, $matches)) {
     $cleanQuery = $query;
 }
 
-if (isset($_GET['sort']) && $_GET['sort'] == 'date') {
-    $sort = 'date';
-    $baseLink .= '&sort=date';
+if (isset($_GET['sort'])
+    && ($_GET['sort'] === 'date' || $_GET['sort'] === 'score')
+) {
+    $sortMode = $_GET['sort'];
 } else {
-    $sort = '';
+    $sortMode = $GLOBALS['phinde']['defaultSort'];
+}
+$sort = $sortMode;
+if ($sortMode !== $GLOBALS['phinde']['defaultSort']) {
+    $baseLink .= '&sort=' . $sortMode;
 }
 
 $filters = array();
@@ -132,10 +137,17 @@ if ($site !== null) {
     $urlNoSite = null;
 }
 
-$urlSortRelevance = buildLink(
-    str_replace('&sort=date', '', $baseLink), $filters, null, null
+$urlSortBase = buildLink(
+    preg_replace('#&sort=[^&]+#', '', $baseLink), $filters, null, null
 );
-$urlSortDate = $urlSortRelevance . '&sort=date';
+$urlSorts = [];
+foreach (['date', 'score'] as $sortMode) {
+    if ($sortMode === $GLOBALS['phinde']['defaultSort']) {
+        $urlSorts[$sortMode] = $urlSortBase;
+    } else {
+        $urlSorts[$sortMode] = $urlSortBase . '&sort=' . $sortMode;
+    }
+}
 
 if (isset($_GET['format']) && $_GET['format'] == 'opensearch') {
     $template = 'opensearch';
@@ -161,8 +173,7 @@ render(
         'activeFilters' => $activeFilters,
         'pager' => $pager,
         'sort' => $sort,
-        'urlSortRelevance' => $urlSortRelevance,
-        'urlSortDate' => $urlSortDate,
+        'urlSorts' => $urlSorts,
         'hitTemplate' => 'search/' . $GLOBALS['phinde']['hitTemplate'],
     )
 );

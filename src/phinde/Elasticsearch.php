@@ -135,6 +135,9 @@ class Elasticsearch
             )
         );
 
+        if ($sort == '' && $GLOBALS['phinde']['defaultSort'] == 'date') {
+            $sort = 'date';
+        }
         if ($sort == 'date') {
             $sortCfg = array('status.modate' => array('order' => 'desc'));
         } else {

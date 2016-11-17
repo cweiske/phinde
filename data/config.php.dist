@@ -34,5 +34,7 @@ $GLOBALS['phinde'] = array(
     'showFullContent' => false,
     //search result "hit" template file
     'hitTemplate' => 'hit.htm',
+    //default sort order: "score" or "date"
+    'defaultSort' => 'score',
 );
 ?>
