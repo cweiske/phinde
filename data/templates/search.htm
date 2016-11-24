@@ -13,25 +13,6 @@
 {% endblock %}
 
 {% block maincontent %}
-  <div class="navbar navbar-inverse navbar-static-top">
-   <div class="navbar-inner">
-    <div class="container">
-     <ul class="nav">
-      <li>
-       <a class="brand" href="{{baseUrl}}">{{apptitle}}</a>
-      </li>
-     </ul>
-     <form class="navbar-form pull-left">
-      <input type="text" name="q" placeholder="Search"
-             value="{{query}}" class="input-xxlarge"/>
-      {% if siteParam %}
-      <input type="hidden" name="site" value="{{site}}"/>
-      {% endif %}
-      <button type="submit" class="btn">Find</button>
-     </form>
-    </div>
-   </div>
-  </div>
   <div class="container">
    <div class="row">
     {% if query %}
