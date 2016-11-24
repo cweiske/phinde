@@ -35,4 +35,9 @@
     {% endif %}
    </div>
   </div>
+  {% if not query %}
+  <script type="text/javascript">
+   document.getElementById("searchq").focus();
+  </script>
+  {% endif %}
 {% endblock %}
