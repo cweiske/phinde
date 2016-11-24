@@ -8,6 +8,9 @@ $esStatus = $es->getIndexStatus();
 $queue = new Queue();
 $gearStatus = $queue->getServerStatus();
 
+$subDb = new Subscriptions();
+$subCount = $subDb->count();
+
 /**
  * @link http://jeffreysambells.com/2012/10/25/human-readable-filesize-php
  */
@@ -29,6 +32,8 @@ render(
     array(
         'esStatus'   => $esStatus,
         'gearStatus' => $gearStatus,
+        'subCount'   => $subCount,
+        'subSum'     => array_sum($subCount),
     )
 );
 ?>

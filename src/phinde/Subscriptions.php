@@ -38,6 +38,28 @@ class Subscriptions
     }
 
     /**
+     * Count number of subscriptions
+     *
+     * @return array Array of keys with different status, number as value
+     */
+    public function count()
+    {
+        $stmt = $this->db->prepare(
+            'SELECT COUNT(*) as count, sub_status FROM subscriptions'
+            . ' GROUP BY sub_status'
+            . ' ORDER BY sub_status'
+        );
+        $stmt->execute();
+
+        $res = [];
+        foreach ($stmt as $row) {
+            $res[$row['sub_status']] = $row['count'];
+        }
+
+        return $res;
+    }
+
+    /**
      * Create a new subscription entry in database.
      * Automatically generates secret, capkey and lease seconds.
      *

@@ -30,6 +30,7 @@
    <td>Index size</td>
    <td style="text-align: right">{{esStatus.size_human}}</td>
   </tr>
+
   <tr>
    <td rowspan="3">Gearman</td>
    <td>Open tasks</td>
@@ -43,6 +44,18 @@
    <td>Task workers</td>
    <td style="text-align: right">{{gearStatus.workers}}</td>
   </tr>
+
+  <tr>
+   <td rowspan="{{subCount|length + 1}}">Subscriptions</td>
+   <td>Total</td>
+   <td style="text-align: right">{{subSum}}</td>
+  </tr>
+  {% for key, number in subCount %}
+  <tr>
+   <td>{{key}}</td>
+   <td style="text-align: right">{{number}}</td>
+  </tr>
+  {% endfor %}
  </tbody>
 </table>
 
