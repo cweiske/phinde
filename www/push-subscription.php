@@ -4,88 +4,102 @@ namespace phinde;
  * Handles PuSH subscription responses
  */
 header('HTTP/1.0 500 Internal Server Error');
-require 'www-header.php';
+require_once 'www-header.php';
 
-//PHP converts dots to underscore, so hub.mode becomes hub_mode
-if (!isset($_GET['hub_mode'])) {
-    header('HTTP/1.0 400 Bad Request');
-    echo "Parameter missing: hub.mode\n";
-    exit(1);
-}
-$hubMode = $_GET['hub_mode'];
-
+//PHP converts dots to underscore, so hub.topic becomes hub_topic
 if (!isset($_GET['hub_topic'])) {
-    header('HTTP/1.0 400 Bad Request');
-    echo "Parameter missing: hub.topic\n";
-    exit(1);
+    err('Parameter missing: hub.topic', '400 Bad Request');
 }
 if (!isValidUrl($_GET['hub_topic'])) {
-    header('HTTP/1.0 400 Bad Request');
-    echo "Invalid parameter value for hub.topic: Invalid URL\n";
-    exit(1);
+    err(
+        'Invalid parameter value for hub.topic: Invalid URL',
+        '400 Bad Request'
+    );
 }
 $hubTopic = $_GET['hub_topic'];
 
 $subDb = new Subscriptions();
+$sub   = $subDb->get($hubTopic);
+if ($sub === false) {
+    //we do not have this topic in our database
+    err('We know nothing about this hub.topic', '404 Not Found');
+}
 
-if ($hubMode == 'denied') {
-    //TODO: Inspect Location header to retry subscription
-    //TODO: remove subscription
-    return;
-} else if ($hubMode == 'subscribe') {
-    //FIXME
-    $pos = array_search($hubTopic, $GLOBALS['phinde']['subscriptions']);
-    if ($pos === false) {
-        //we do not want to subscribe
-        header('HTTP/1.0 404 Not Found');
-        echo "We are not interested in this hub.topic\n";
-        exit(1);
-    }
+//capability key verification so third parties can't forge requests
+// see https://www.w3.org/TR/capability-urls/
+if (!isset($_GET['capkey'])) {
+    err('Parameter missing: capkey', '400 Bad Request');
+}
+if ($sub->sub_capkey !== $_GET['capkey']) {
+    err('Invalid parameter value for capkey', '400 Bad Request');
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $queue = new Queue();
+    $queue->addToProcessList($hubTopic, ['index', 'crawl']);
+    $subDb->pinged($sub->sub_id);
+    header('HTTP/1.0 200 OK');
+    echo "URL queued.\n";
+    exit();
+}
+
+if (!isset($_GET['hub_mode'])) {
+    err('Parameter missing: hub.mode', '400 Bad Request');
+}
+$hubMode = $_GET['hub_mode'];
+
+if ($hubMode == 'subscribe') {
     if (!isset($_GET['hub_challenge'])) {
-        header('HTTP/1.0 400 Bad Request');
-        echo "Parameter missing: hub.challenge\n";
-        exit(1);
+        err('Parameter missing: hub.challenge', '400 Bad Request');
     }
     $hubChallenge = $_GET['hub_challenge'];
 
     if (!isset($_GET['hub_lease_seconds'])) {
-        header('HTTP/1.0 400 Bad Request');
-        echo "Parameter missing: hub.lease_seconds\n";
-        exit(1);
+        err('Parameter missing: hub.lease_seconds', '400 Bad Request');
     }
-    $hubLeaseSeconds = $_GET['hub_lease_seconds'];
+    if (!is_numeric($_GET['hub_lease_seconds'])) {
+        err('Invalid value for hub.lease_seconds', '400 Bad Request');
+    }
+    $hubLeaseSeconds = intval($_GET['hub_lease_seconds']);
 
-    //FIXME: store in database
+    $subDb->subscribed($sub->sub_id, $hubLeaseSeconds);
 
     header('HTTP/1.0 200 OK');
     header('Content-type: text/plain');
     echo $hubChallenge;
-    exit(0);
+    exit();
 
 } else if ($hubMode == 'unsubscribe') {
-    $sub = $subDb->get($hubTopic);
-    if ($sub === false) {
-        //we do not know this subscription
-        header('HTTP/1.0 404 Not Found');
-        echo "We are not subscribed to this hub.topic\n";
-        exit(1);
-    }
-    $pos = array_search($hubTopic, $GLOBALS['phinde']['subscriptions']);
-    if ($pos !== false) {
+    if ($sub->sub_status != 'unsubscribing') {
         //we do not want to unsubscribe
-        header('HTTP/1.0 404 Not Found');
-        echo "We do not want to unsubscribe from this hub.topic\n";
-        exit(1);
+        err(
+            'We do not want to unsubscribe from this hub.topic',
+            '404 Not Found'
+        );
     }
-    $sub->remove($hubTopic);
+    if (!isset($_GET['hub_challenge'])) {
+        err('Parameter missing: hub.challenge', '400 Bad Request');
+    }
+    $hubChallenge = $_GET['hub_challenge'];
+
+    $subDb->unsubscribed($sub->sub_id);
+
     header('HTTP/1.0 200 OK');
     header('Content-type: text/plain');
-    echo "Unsubscribed.\n";
-    exit(0);
+    echo $hubChallenge;
+    exit();
+
+} else if ($hubMode == 'denied') {
+    //TODO: Inspect Location header to retry subscription (still valid?)
+    $reason = '';
+    if (isset($_GET['hub_reason'])) {
+        $reason = $_GET['hub_reason'];
+    }
+    $subDb->denied($sub->sub_id, $reason);
+    exit();
+
 } else {
-    header('HTTP/1.0 400 Bad Request');
-    echo "Invalid parameter value for hub.mode\n";
-    exit(1);
+    err('Invalid parameter value for hub.mode', '400 Bad Request');
 }
 
 
@@ -100,5 +114,12 @@ function isValidUrl($url)
         return true;
     }
     return false;
+}
+
+function err($msg, $statusline)
+{
+    header('HTTP/1.0 ' . $statusline);
+    echo $msg . "\n";
+    exit(1);
 }
 ?>

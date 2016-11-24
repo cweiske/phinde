@@ -15,10 +15,6 @@ $GLOBALS['phinde'] = array(
     //list of regexes for URLs that should not be crawled
     'crawlBlacklist' => array(
     ),
-    //list of URLs that should be subscribed to with PubSubHubbub
-    'subscriptions' => array(
-        'http://www.example.org/feed',
-    ),
     //verbose output
     'debug' => true,
     //time in seconds after which URLs may be re-indexed
@@ -36,5 +32,9 @@ $GLOBALS['phinde'] = array(
     'hitTemplate' => 'hit.htm',
     //default sort order: "score" or "date"
     'defaultSort' => 'score',
+    //database for PuSH subscriptions
+    'db_dsn' => 'mysql:host=localhost;dbname=phinde',
+    'db_user' => 'FIXME',
+    'db_pass' => 'FIXME',
 );
 ?>
