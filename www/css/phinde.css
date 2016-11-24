@@ -6,6 +6,10 @@
     margin-bottom: 1ex;
 }
 
+a.disguised {
+    color: inherit;
+}
+
 /* bootstrap 2.1.1 does not have this style, 2.3.2 would have it */
 .pagination ul > .active > a,
 .pagination ul > .active > a:hover {
