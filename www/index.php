@@ -175,6 +175,7 @@ render(
         'sort' => $sort,
         'urlSorts' => $urlSorts,
         'hitTemplate' => 'search/' . $GLOBALS['phinde']['hitTemplate'],
+        'sidebarinclude' => $GLOBALS['phinde']['sidebarinclude'],
     )
 );
 ?>

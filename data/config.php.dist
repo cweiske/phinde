@@ -30,6 +30,8 @@ $GLOBALS['phinde'] = array(
     'showFullContent' => false,
     //search result "hit" template file
     'hitTemplate' => 'hit.htm',
+    //sidebar help text. empty to disable
+    'sidebarinclude' => 'search/sidebar-searchtips.htm',
     //default sort order: "score" or "date"
     'defaultSort' => 'score',
     //database for PuSH subscriptions
