@@ -30,6 +30,7 @@ Features
   - or use the ``site`` GET parameter:
     ``/?q=foo&site=example.org/dir``
 - OpenSearch support with HTML and Atom result lists
+* Instant indexing with WebSub (formerly PubSubHubbub)
 
 
 ============
@@ -40,6 +41,16 @@ Dependencies
 - gearman
 - Console_CommandLine
 - Net_URL2
+
+
+=====
+Setup
+=====
+This section is incomplete.
+
+Cron job
+========
+Run ``bin/renew-subscriptions.php`` once a day with cron.
 
 
 ============

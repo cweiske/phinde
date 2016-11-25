@@ -43,12 +43,16 @@ if ($topic != $url) {
 }
 
 $sub = $subDb->get($topic);
-if ($sub !== false) {
-    Log::error('Topic exists already in subscription table');
-    Log::info('Current status: ' . $sub->sub_status);
-    exit(3);
+if ($sub === false) {
+    $subDb->create($topic);
+} else {
+    Log::info(
+        'Topic exists already in subscription table with status '
+        . $sub->sub_status
+    );
+    Log::info('Renewing subscription...');
+    $subDb->renew($sub->sub_id);
 }
-$subDb->create($topic);
 $sub = $subDb->get($topic);
 
 $callbackUrl = $GLOBALS['phinde']['baseurl'] . 'push-subscription.php'

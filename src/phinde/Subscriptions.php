@@ -60,6 +60,23 @@ class Subscriptions
     }
 
     /**
+     * Get all topics that either expired or expire soon
+     *
+     * @return \PDOStatement Result iterator
+     */
+    public function getExpiring()
+    {
+        $stmt = $this->db->prepare(
+            'SELECT * FROM subscriptions'
+            . ' WHERE sub_status IN ("active", "expired")'
+            . ' AND DATEDIFF(sub_expires, NOW()) <= 2'
+        );
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    /**
      * Create a new subscription entry in database.
      * Automatically generates secret, capkey and lease seconds.
      *
@@ -92,6 +109,23 @@ class Subscriptions
                 ':capkey'        => bin2hex(openssl_random_pseudo_bytes(16)),
             ]
         );
+    }
+
+    /**
+     * Renew a subscription: Set its status to "subscribing"
+     *
+     * @param integer $subId Subscription ID
+     *
+     * @return void
+     */
+    public function renew($subId)
+    {
+        $this->db->prepare(
+            'UPDATE subscriptions'
+            . ' SET sub_status  = "subscribing"'
+            . '   , sub_updated = NOW()'
+            . ' WHERE sub_id = :id'
+        )->execute([':id' => $subId]);
     }
 
     /**
@@ -137,6 +171,14 @@ class Subscriptions
         )->execute([':id' => $subId]);
     }
 
+    /**
+     * Subscription has been cancelled/denied for some reason
+     *
+     * @param integer $subId  Subscription ID
+     * @param string  $reason Cancellation reason
+     *
+     * @return void
+     */
     public function denied($subId, $reason)
     {
         $this->db->prepare(
@@ -148,6 +190,13 @@ class Subscriptions
         )->execute([':id' => $subId, ':reason' => $reason]);
     }
 
+    /**
+     * Topic update notification has been received
+     *
+     * @param integer $subId  Subscription ID
+     *
+     * @return void
+     */
     public function pinged($subId)
     {
         $this->db->prepare(
