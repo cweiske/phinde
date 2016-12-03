@@ -2,6 +2,8 @@
 $GLOBALS['phinde'] = array(
     //name of the app in the frontend
     'apptitle' => 'website search',
+    //needed for websub
+    'baseurl' => 'http://phinde.example.org/',
     'elasticsearch' => 'http://127.0.0.1:9200/phinde/',
     //whitelist of domains that shall be crawled
     'domains' => array(
