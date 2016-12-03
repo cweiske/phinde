@@ -10,10 +10,6 @@ $GLOBALS['phinde'] = array(
         'www.example.org',
         'test.example.org'
     ),
-    //list of URL beginnings that should be ignored
-    'blacklist' => array(
-        'http://bad.example.org/'
-    ),
     //list of regexes for URLs that should not be crawled
     'crawlBlacklist' => array(
     ),
