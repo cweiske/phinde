@@ -53,10 +53,6 @@ $url = $res->args['url'];
 $url = Helper::addSchema($url);
 $urlObj = new \Net_URL2($url);
 $url = $urlObj->getNormalizedURL();
-if (!Helper::isUrlAllowed($url)) {
-    Log::error("Domain is not allowed; not crawling");
-    exit(2);
-}
 
 try {
     $actions = array();
