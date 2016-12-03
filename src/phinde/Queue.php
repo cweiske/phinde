@@ -43,10 +43,14 @@ class Queue
         $cmd = 'gearadmin --status'
             . '| grep ' . escapeshellarg($this->queueName);
         $line = exec($cmd);
-
-        $parts = preg_split('#\s+#', $line);
-        if (count($parts) !== 4) {
-            throw new \Exception('gearadmin status line does not have 4 parts');
+        if ($line === '') {
+            //job not registered
+            $parts = [0, -1, -1, -1];
+        } else {
+            $parts = preg_split('#\s+#', $line);
+            if (count($parts) !== 4) {
+                throw new \Exception('gearadmin status line does not have 4 parts');
+            }
         }
 
         return array(
