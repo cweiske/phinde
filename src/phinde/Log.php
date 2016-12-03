@@ -17,7 +17,16 @@ class Log
 
     public static function log($msg)
     {
-        echo $msg . "\n";
+        if (isset($GLOBALS['phinde']['logfile'])
+            && $GLOBALS['phinde']['logfile'] != ''
+        ) {
+            file_put_contents(
+                $GLOBALS['phinde']['logfile'],
+                $msg . "\n", FILE_APPEND
+            );
+        } else {
+            echo $msg . "\n";
+        }
     }
 }
 ?>
