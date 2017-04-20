@@ -1,0 +1,17 @@
+[Unit]
+Description=phinde worker %i
+PartOf=phinde.service
+ReloadPropagatedFrom=phinde.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/cweiske/www/search.cweiske.de/
+User=cweiske
+Group=www-cweiske
+ExecStart=/home/cweiske/www/search.cweiske.de/bin/phinde-worker.php
+TimeoutStopSec=5
+Restart=always
+RestartSec=60
+
+[Install]
+WantedBy=phinde.service

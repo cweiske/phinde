@@ -1,0 +1,18 @@
+# This is a mostly empty service, but allows commands like stop, start, reload
+# to propagate to all phinde@ service instances.
+
+[Unit]
+Description=phinde search server
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/true
+ExecReload=/bin/true
+WorkingDirectory=/home/cweiske/www/search.cweiske.de/
+User=cweiske
+Group=www-cweiske
+
+[Install]
+WantedBy=multi-user.target

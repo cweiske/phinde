@@ -46,7 +46,28 @@ Dependencies
 =====
 Setup
 =====
-This section is incomplete.
+FIXME: This section is incomplete.
+
+
+System service
+==============
+When using systemd, you can let it run multiple worker instances when
+the system boots up:
+
+#. Copy files ``data/systemd/phinde*.service`` into ``/etc/systemd/system/``
+#. Adjust user and group names, and the work directories
+#. Enable three worker processes::
+
+     $ systemctl daemon-reload
+     $ systemctl enable phinde@1
+     $ systemctl enable phinde@2
+     $ systemctl enable phinde@3
+     $ systemctl enable phinde
+     $ systemctl start phinde
+#. Now three workers are running. Restarting the ``phinde`` service also
+   restarts the workers.
+
+
 
 Cron job
 ========
