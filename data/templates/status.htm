@@ -31,7 +31,7 @@
    <td style="text-align: right">{{esStatus.size_human}}</td>
   </tr>
 
-  <tr class="{%if 0 > gearStatus.tasks %}warning{%endif%}">
+  <tr class="{%if 0 != gearStatus.tasks %}warning{%endif%}">
    <th rowspan="3">Gearman</th>
    <td>Open tasks</td>
    <td style="text-align: right">{{gearStatus.tasks}}</td>
