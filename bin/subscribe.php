@@ -22,16 +22,17 @@ try {
     $cc->displayError($e->getMessage());
 }
 
+$subDb = new Subscriptions();
+
 $url = $res->args['url'];
 $url = Helper::addSchema($url);
 $urlObj = new \Net_URL2($url);
 $url = $urlObj->getNormalizedURL();
 if (!Helper::isUrlAllowed($url)) {
-    Log::error("Domain is not allowed; not crawling");
+    Log::error("Domain is not allowed; not subscribing");
+    $subDb->remove($url);
     exit(2);
 }
-
-$subDb = new Subscriptions();
 
 list($topic, $hub) = $subDb->detectHub($url);
 if ($hub === null) {

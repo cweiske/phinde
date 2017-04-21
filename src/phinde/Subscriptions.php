@@ -38,6 +38,22 @@ class Subscriptions
     }
 
     /**
+     * Remove a topic
+     *
+     * @param string $topic Topic URL
+     *
+     * @return void
+     */
+    public function remove($topic)
+    {
+        $stmt = $this->db->prepare(
+            'DELETE FROM subscriptions'
+            . ' WHERE sub_topic = :topic'
+        );
+        $stmt->execute([':topic' => $topic]);
+    }
+
+    /**
      * Count number of subscriptions
      *
      * @return array Array of keys with different status, number as value
@@ -68,8 +84,16 @@ class Subscriptions
     {
         $stmt = $this->db->prepare(
             'SELECT * FROM subscriptions'
-            . ' WHERE sub_status IN ("active", "expired")'
-            . ' AND DATEDIFF(sub_expires, NOW()) <= 2'
+            . ' WHERE'
+            . '('
+            //expire soon
+            . '  sub_status IN ("active", "expired")'
+            . '  AND DATEDIFF(sub_expires, NOW()) <= 2'
+            . ') OR ('
+            //no reaction to subscription within 10 minutes
+            . '  sub_status = "subscribing"'
+            . '  AND TIMEDIFF(NOW(), sub_created) > "00:10:00"'
+            . ')'
         );
         $stmt->execute();
 
