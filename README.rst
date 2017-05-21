@@ -74,6 +74,18 @@ Cron job
 Run ``bin/renew-subscriptions.php`` once a day with cron.
 
 
+=====
+Howto
+=====
+
+Delete index data from one domain::
+
+    $ curl -iv -XDELETE -H 'Content-Type: application/json' -d '{"query":{"term":{"domain":"example.org"}}}' http://127.0.0.1:9200/phinde/_query
+
+That's delete-by-query 2.0, see
+https://www.elastic.co/guide/en/elasticsearch/plugins/2.0/delete-by-query-usage.html
+
+
 ============
 About phinde
 ============
