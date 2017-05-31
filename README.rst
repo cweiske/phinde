@@ -30,15 +30,15 @@ Features
   - or use the ``site`` GET parameter:
     ``/?q=foo&site=example.org/dir``
 - OpenSearch support with HTML and Atom result lists
-* Instant indexing with WebSub (formerly PubSubHubbub)
+- Instant indexing with WebSub (formerly PubSubHubbub)
 
 
 ============
 Dependencies
 ============
 - PHP 5.5+
-- elasticsearch 2.0
-- gearman
+- Elasticsearch 2.0
+- Gearman
 - Console_CommandLine
 - Net_URL2
 
@@ -46,7 +46,59 @@ Dependencies
 =====
 Setup
 =====
-FIXME: This section is incomplete.
+#. Install and run Elasticsearch and Gearman
+#. Get a local copy of the code::
+
+     $ git clone https://git.cweiske.de/phinde.git phinde
+
+#. Install dependencies via PEAR::
+
+     $ pear install console_commandline net_url2
+
+#. Point your webserver's document root to phinde's ``www`` directory
+#. Copy ``data/config.php.dist`` to ``data/config.php`` and adjust it.
+   Make sure your add your domain to the crawl whitelist.
+#. Run ``bin/setup.php`` which sets up the Elasticsearch schema
+#. Put your homepage into the queue::
+
+     $ ./bin/process.php http://example.org/
+
+#. Start at least one worker to process the crawl+index queue::
+
+     $ ./bin/phinde-worker.php
+
+#. Check phinde's status page in your browser.
+   The number of open tasks should be > 0, the number of workers also.
+
+
+Re-index when your site changes
+===============================
+When your site changed, the search engine needs to re-crawl and re-index
+the pages.
+
+Simply tell phinde that something changed by running::
+
+    $ ./bin/process.php http://example.org/foo.htm
+
+phinde supports HTML pages and Atom feeds, so if your blog has a feed
+it's enough to let phinde reindex that one.
+It will find all linked pages automatically.
+
+
+Website integration
+===================
+Adding a simple search form to your website is easy.
+It needs two things:
+
+- ``<form>`` tag with an action that points to the phinde instance
+- Search text field with name of ``q``.
+
+Example::
+
+  <form method="get" action="http://phinde.example.org">
+    <input type="text" name="q" placeholder="Search text"/>
+    <button type="submit">Search</button>
+  </form>
 
 
 System service
@@ -72,6 +124,7 @@ the system boots up:
 Cron job
 ========
 Run ``bin/renew-subscriptions.php`` once a day with cron.
+It will renew the WebSub subscriptions.
 
 
 =====
