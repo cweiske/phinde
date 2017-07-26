@@ -98,7 +98,7 @@ $timeEnd = microtime(true);
 
 $pager = new Html_Pager(
     $res->hits->total, $perPage, $page + 1,
-    $baseLink
+    buildLink($baseLink, $filters, null, null)
 );
 
 foreach ($res->hits->hits as &$hit) {
