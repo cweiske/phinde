@@ -92,7 +92,7 @@ class Elasticsearch
             $query      = trim(str_replace($matches[0], '', $query));
             $qMust[]    = array(
                 'range' => array(
-                    'modate' => array(
+                    'status.modate' => array(
                         'gt' => $dateAfter . '||/d',
                     )
                 )
@@ -103,7 +103,7 @@ class Elasticsearch
             $query      = trim(str_replace($matches[0], '', $query));
             $qMust[]    = array(
                 'range' => array(
-                    'modate' => array(
+                    'status.modate' => array(
                         'lt' => $dateBefore . '||/d',
                     )
                 )
@@ -114,7 +114,7 @@ class Elasticsearch
             $query      = trim(str_replace($matches[0], '', $query));
             $qMust[]    = array(
                 'range' => array(
-                    'modate' => array(
+                    'status.modate' => array(
                         'gte' => $dateExact . '||/d',
                         'lte' => $dateExact . '||/d',
                     )
