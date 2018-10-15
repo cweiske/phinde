@@ -41,6 +41,7 @@ Dependencies
 - Gearman
 - Console_CommandLine
 - Net_URL2
+- Twig 1.x
 
 
 =====
@@ -54,6 +55,8 @@ Setup
 #. Install dependencies via PEAR::
 
      $ pear install console_commandline net_url2
+     $ pear channel-discover pear.twig-project.org
+     $ pear install twig/Twig
 
 #. Point your webserver's document root to phinde's ``www`` directory
 #. Copy ``data/config.php.dist`` to ``data/config.php`` and adjust it.
