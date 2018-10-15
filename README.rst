@@ -39,6 +39,7 @@ Dependencies
 - PHP 5.5+
 - Elasticsearch 2.0
 - Gearman
+- PHP Gearman extension
 - Console_CommandLine
 - Net_URL2
 - Twig 1.x
@@ -48,6 +49,7 @@ Dependencies
 Setup
 =====
 #. Install and run Elasticsearch and Gearman
+#. Install ``php-gearman``
 #. Get a local copy of the code::
 
      $ git clone https://git.cweiske.de/phinde.git phinde
