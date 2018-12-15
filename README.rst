@@ -54,11 +54,9 @@ Setup
 
      $ git clone https://git.cweiske.de/phinde.git phinde
 
-#. Install dependencies via PEAR::
+#. Install dependencies via composer::
 
-     $ pear install console_commandline net_url2
-     $ pear channel-discover pear.twig-project.org
-     $ pear install twig/Twig
+     $ composer install
 
 #. Point your webserver's document root to phinde's ``www`` directory
 #. Copy ``data/config.php.dist`` to ``data/config.php`` and adjust it.

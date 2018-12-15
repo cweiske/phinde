@@ -2,7 +2,6 @@
 namespace phinde;
 require_once __DIR__ . '/../src/init.php';
 
-\Twig_Autoloader::register();
 $GLOBALS['twig'] = new \Twig_Environment(
     new \Twig_Loader_Filesystem(__DIR__ . '/../data/templates'),
     array(
