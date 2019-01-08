@@ -15,6 +15,12 @@ if (isset($_GET['page'])) {
     }
     //PEAR Pager begins at 1
     $page = (int)$_GET['page'] - 1;
+
+    if ($page >= 100) {
+        //Elasticsearch by default only allows 100 pages
+        // we do not want exceptions in our logs
+        throw new Exception_Input('List page is too large');
+    }
 }
 
 $perPage = 10;//$GLOBALS['phinde']['perPage'];
