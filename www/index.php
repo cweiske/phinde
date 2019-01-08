@@ -19,7 +19,9 @@ if (isset($_GET['page'])) {
     if ($page >= 100) {
         //Elasticsearch by default only allows 100 pages
         // we do not want exceptions in our logs
-        throw new Exception_Input('List page is too large');
+        header('HTTP/1.0 400 Bad Request');
+        echo "List page number is too large\n";
+        exit(1);
     }
 }
 
