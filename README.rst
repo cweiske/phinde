@@ -38,7 +38,7 @@ Dependencies
 ============
 - PHP 5.5+
 - Elasticsearch 2.0
-- Gearman
+- Gearman (Debian 9: ``gearman-job-server``, not ``gearman-server``)
 - PHP Gearman extension
 - Console_CommandLine
 - Net_URL2
