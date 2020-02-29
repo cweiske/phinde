@@ -3,6 +3,20 @@ namespace phinde;
 
 class Helper
 {
+    public static function rewriteUrl($url)
+    {
+        if (!isset($GLOBALS['phinde']['urlRewrites'])
+            || count($GLOBALS['phinde']['urlRewrites']) == 0
+        ) {
+            return $url;
+        }
+
+        foreach ($GLOBALS['phinde']['urlRewrites'] as $pattern => $replacement) {
+            $url = preg_replace('#' . $pattern . '#', $replacement, $url);
+        }
+        return $url;
+    }
+
     public static function isUrlAllowed($url)
     {
         $urlDomain = parse_url($url, PHP_URL_HOST);

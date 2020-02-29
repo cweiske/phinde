@@ -13,6 +13,10 @@ $GLOBALS['phinde'] = array(
     //list of regexes for URLs that should not be crawled
     'crawlBlacklist' => array(
     ),
+    //modify URLs with regex
+    'urlRewrites' => array(
+        // '^http://example.org/' => 'https://example.org/',
+    ),
     //verbose output
     'debug' => true,
     //full path to log file

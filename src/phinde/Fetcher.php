@@ -15,12 +15,15 @@ class Fetcher
      */
     public function fetch($url, $actions, $force = false)
     {
+        $url = Helper::rewriteUrl($url);
+
         $esDoc = $this->es->get($url);
         if (isset($esDoc->status->location)
             && $esDoc->status->location != ''
         ) {
             //TODO: what if location redirects change?
             $url = $esDoc->status->location;
+            $url = Helper::rewriteUrl($url);
             $esDoc = $this->es->get($url);
         }
 
@@ -53,6 +56,7 @@ class Fetcher
         }
 
         $effUrl = Helper::removeAnchor($res->getEffectiveUrl());
+        $effUrl = Helper::rewriteUrl($effUrl);
         if ($effUrl != $url) {
             $this->storeRedirect($url, $effUrl);
             $url = $effUrl;

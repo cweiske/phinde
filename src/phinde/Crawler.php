@@ -53,6 +53,7 @@ class Crawler
     {
         $filteredLinkInfos = array();
         foreach ($linkInfos as $linkInfo) {
+            $linkInfo->url = Helper::rewriteUrl($linkInfo->url);
             $allowed = Helper::isUrlAllowed($linkInfo->url);
             $crawl   = $allowed;
             $index   = $GLOBALS['phinde']['indexNonAllowed'] || $allowed;
