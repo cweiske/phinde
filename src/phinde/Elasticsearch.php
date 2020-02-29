@@ -122,6 +122,11 @@ class Elasticsearch
             );
         }
 
+        if (strpos($query, '/') !== false && strpos($query, '"') === false) {
+            //add quotes when there is a slash and no quotes
+            // https://stackoverflow.com/questions/31963643/escaping-forward-slashes-in-elasticsearch
+            $query = '"' . $query . '"';
+        }
         $qMust[] = array(
             'query_string' => array(
                 'default_field' => '_all',
