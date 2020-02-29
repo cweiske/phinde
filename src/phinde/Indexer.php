@@ -77,12 +77,9 @@ class Indexer
             $xpContext = $doc->getElementById('content');
         }
 
-        $esDoc->url = $url;
-        $esDoc->schemalessUrl = Helper::noSchema($url);
         $esDoc->type = 'html';
         $esDoc->subtype = '';
         $esDoc->mimetype = $mimetype;
-        $esDoc->domain   = parse_url($url, PHP_URL_HOST);
 
         //$esDoc->source = 'FIXME';
         //$esDoc->sourcetitle = 'FIXME';

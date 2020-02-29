@@ -30,6 +30,24 @@ class Elasticsearch_Request extends \HTTP_Request2
             . $error
         );
     }
-}
 
+    /**
+     * Sets the request body - inject content type
+     *
+     * @param mixed $body       Either a string with the body or filename
+     *                          containing body or pointer to an open file or
+     *                          object with multipart body data
+     * @param bool  $isFilename Whether first parameter is a filename
+     *
+     * @return HTTP_Request2
+     * @throws HTTP_Request2_LogicException
+     *
+     * @link https://www.elastic.co/blog/strict-content-type-checking-for-elasticsearch-rest-requests
+     */
+    public function setBody($body, $isFilename = false)
+    {
+        $this->setHeader('content-type', 'application/json');
+        return parent::setBody($body, $isFilename);
+    }
+}
 ?>

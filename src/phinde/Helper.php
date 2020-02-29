@@ -81,9 +81,15 @@ class Helper
     public static function baseDoc($url)
     {
         $esDoc = new \stdClass();
-        $esDoc->status = new \stdClass();
+        $esDoc->status = (object) array(
+            'findable'  => false,
+            'modate'    => '',
+            'crdate'    => '',
+            'processed' => '',
+        );
         $esDoc->url = $url;
         $esDoc->schemalessUrl = Helper::noSchema($url);
+        $esDoc->domain        = parse_url($url, PHP_URL_HOST);
         return $esDoc;
     }
 }

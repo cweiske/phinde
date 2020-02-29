@@ -167,6 +167,7 @@ class Elasticsearch
             ),
             'highlight' => array(
                 'pre_tags' => array('<em class="hl">'),
+                'post_tags' => array('</em>'),
                 'order' => 'score',
                 'encoder' => 'html',
                 'fields' => array(
@@ -231,8 +232,12 @@ class Elasticsearch
 
         //unset($doc['_source']);
 
-        //ini_set('xdebug.var_display_max_depth', 10);
-        //echo json_encode($doc);die();
+        if (false) {
+            ini_set('xdebug.var_display_max_depth', 10);
+            header('Content-type: application/json');
+            echo json_encode($doc, JSON_PRETTY_PRINT);die();
+        }
+
         $r->setBody(json_encode($doc));
         $res = $r->send();
         return json_decode($res->getBody());

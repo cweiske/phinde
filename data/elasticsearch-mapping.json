@@ -9,7 +9,7 @@
                             "type": "integer"
                         },
                         "location": {
-                            "type": "string"
+                            "type": "text"
                         },
                         "processed": {
                             "type": "date"
@@ -26,74 +26,66 @@
                     }
                 },
                 "type": {
-                    "type": "string",
-                    "index": "not_analyzed"
+                    "type": "keyword"
                 },
                 "subtype": {
-                    "type": "string",
-                    "index": "not_analyzed"
+                    "type": "keyword"
                 },
                 "mimetype": {
-                    "type": "string",
-                    "index": "not_analyzed"
+                    "type": "keyword"
                 },
                 "url": {
-                    "type": "string",
-                    "index": "not_analyzed",
+                    "type": "keyword",
                     "boost": 1.5
                 },
                 "schemalessUrl": {
-                    "type": "string",
-                    "index": "not_analyzed",
+                    "type": "keyword",
                     "boost": 1.5
                 },
                 "domain": {
-                    "type": "string",
-                    "index": "not_analyzed",
+                    "type": "keyword",
                     "boost": 1.8
                 },
                 "source": {
-                    "type": "string",
-                    "index": "not_analyzed"
+                    "type": "keyword"
                 },
                 "language": {
-                    "type": "string",
-                    "index": "not_analyzed"
+                    "type": "keyword"
                 },
                 "title": {
-                    "type": "string",
+                    "type": "text",
                     "boost": 2
                 },
                 "h1": {
-                    "type": "string",
+                    "type": "text",
                     "boost": 1.8
                 },
                 "h2": {
-                    "type": "string",
+                    "type": "text",
                     "boost": 1.7
                 },
                 "h3": {
-                    "type": "string",
+                    "type": "text",
                     "boost": 1.6
                 },
                 "h4": {
-                    "type": "string",
+                    "type": "text",
                     "boost": 1.5
                 },
                 "h5": {
-                    "type": "string",
+                    "type": "text",
                     "boost": 1.4
                 },
                 "h6": {
-                    "type": "string",
+                    "type": "text",
                     "boost": 1.3
                 },
                 "text": {
-                    "type": "string",
+                    "type": "text",
                     "boost": 1.0
                 },
                 "tags": {
-                    "type": "string",
+                    "type": "keyword",
                     "boost": 1.5
                 }
             }

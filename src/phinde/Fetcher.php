@@ -60,6 +60,21 @@ class Fetcher
         }
         //FIXME: etag, hash on content
 
+        if ($esDoc === null) {
+            //not known yet
+            $esDoc = Helper::baseDoc($url);
+        }
+
+        $lm = $res->getHeader('last-modified');
+        if ($lm !== null) {
+            $esDoc->status->modate = gmdate('c', strtotime($lm));
+        } else {
+            $esDoc->status->modate = gmdate('c');
+        }
+        if ($esDoc->status->crdate == '') {
+            $esDoc->status->crdate = $esDoc->status->modate;
+        }
+
         $retrieved = new Retrieved();
         $retrieved->httpRes = $res;
         $retrieved->esDoc   = $esDoc;
