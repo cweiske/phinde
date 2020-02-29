@@ -38,6 +38,7 @@ Dependencies
 ============
 - PHP 5.5+
 - Elasticsearch 2.0
+- MySQL or MariaDB for WebSub subscriptions
 - Gearman (Debian 9: ``gearman-job-server``, not ``gearman-server``)
 - PHP Gearman extension
 - Console_CommandLine
@@ -61,6 +62,7 @@ Setup
 #. Point your webserver's document root to phinde's ``www`` directory
 #. Copy ``data/config.php.dist`` to ``data/config.php`` and adjust it.
    Make sure your add your domain to the crawl whitelist.
+#. Create a MySQL database and import the schema from ``data/schema.sql``
 #. Run ``bin/setup.php`` which sets up the Elasticsearch schema
 #. Put your homepage into the queue::
 
