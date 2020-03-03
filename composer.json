@@ -3,6 +3,7 @@
         "pear/console_commandline": "^1.2",
         "pear/net_url2": "^2.2",
         "twig/twig": "^1.0",
-        "pear/http_request2": "^2.3"
+        "pear/http_request2": "^2.3",
+        "pear/http2": "^1.1"
     }
 }
