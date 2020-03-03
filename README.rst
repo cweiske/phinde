@@ -144,6 +144,21 @@ That's delete-by-query 2.0, see
 https://www.elastic.co/guide/en/elasticsearch/plugins/2.0/delete-by-query-usage.html
 
 
+Subscribe to a website/feed
+===========================
+Phinde supports WebSub to get subscribe to changes of a website.
+When phinde gets notified by the hub about changes, it will
+immediately crawl and index the changed pages.
+
+Subscribe to a website's feed::
+
+    $ php bin/subscribe.php http://example.org/feed.atom
+
+Phinde will determine the website's hub and send a registration request to it.
+
+The status page will show the number of working, and the number of open
+subscriptions.
+
 ============
 About phinde
 ============
