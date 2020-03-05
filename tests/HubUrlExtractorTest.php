@@ -13,7 +13,7 @@ class HubUrlExtractorTest extends \PHPUnit\Framework\TestCase
             . "\r\n",
             'http://example.org/'
         );
-        
+
         $extractor = new phinde\HubUrlExtractor();
         $extractor->setRequestTemplate(
             new HTTP_Request2(null, null, ['adapter' => $mock])
@@ -27,7 +27,7 @@ class HubUrlExtractorTest extends \PHPUnit\Framework\TestCase
             $extractor->getUrls('http://example.org/')
         );
     }
-    
+
     public function testGetUrlsHtml()
     {
         $mock = new HTTP_Request2_Adapter_Mock();
@@ -55,7 +55,7 @@ class HubUrlExtractorTest extends \PHPUnit\Framework\TestCase
 HTM,
             'http://example.org/'
         );
-        
+
         $extractor = new phinde\HubUrlExtractor();
         $extractor->setRequestTemplate(
             new HTTP_Request2(null, null, ['adapter' => $mock])
@@ -69,7 +69,7 @@ HTM,
             $extractor->getUrls('http://example.org/')
         );
     }
-    
+
     public function testGetUrlsXHtml()
     {
         $mock = new HTTP_Request2_Adapter_Mock();
@@ -97,7 +97,7 @@ HTM,
 HTM,
             'http://example.org/'
         );
-        
+
         $extractor = new phinde\HubUrlExtractor();
         $extractor->setRequestTemplate(
             new HTTP_Request2(null, null, ['adapter' => $mock])
@@ -111,7 +111,7 @@ HTM,
             $extractor->getUrls('http://example.org/')
         );
     }
-    
+
     public function testGetUrlsAtom()
     {
         $mock = new HTTP_Request2_Adapter_Mock();
@@ -139,7 +139,7 @@ HTM,
 HTM,
             'http://example.org/'
         );
-        
+
         $extractor = new phinde\HubUrlExtractor();
         $extractor->setRequestTemplate(
             new HTTP_Request2(null, null, ['adapter' => $mock])
@@ -153,7 +153,7 @@ HTM,
             $extractor->getUrls('http://example.org/')
         );
     }
-    
+
     public function testGetUrlsRss2()
     {
         $mock = new HTTP_Request2_Adapter_Mock();
@@ -183,7 +183,51 @@ HTM,
 HTM,
             'http://example.org/'
         );
-        
+
+        $extractor = new phinde\HubUrlExtractor();
+        $extractor->setRequestTemplate(
+            new HTTP_Request2(null, null, ['adapter' => $mock])
+        );
+
+        $this->assertEquals(
+            [
+                'hub'  => 'https://hub.example.com/',
+                'self' => 'http://example.com/feed',
+            ],
+            $extractor->getUrls('http://example.org/')
+        );
+    }
+
+    public function testGetUrlsRss2WebLinking()
+    {
+        $mock = new HTTP_Request2_Adapter_Mock();
+        //HEAD
+        $this->addResponse(
+            $mock,
+            "HTTP/1.0 200 OK\r\n"
+            . "Content-type: application/rss+xml\r\n"
+            . "\r\n",
+            'http://example.org/'
+        );
+        //HEAD
+        $this->addResponse(
+            $mock,
+            "HTTP/1.0 200 OK\r\n"
+            . "Content-type: application/rss+xml\r\n"
+            . "\r\n"
+            . <<<HTM
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+ <channel>
+  <link>http://www.example.com/main.html</link>
+  <atom:link rel="self" href="http://example.com/feed"/>
+  <atom:link rel="hub" href="https://hub.example.com/"/>
+ </channel>
+</rss>
+HTM,
+            'http://example.org/'
+        );
+
         $extractor = new phinde\HubUrlExtractor();
         $extractor->setRequestTemplate(
             new HTTP_Request2(null, null, ['adapter' => $mock])

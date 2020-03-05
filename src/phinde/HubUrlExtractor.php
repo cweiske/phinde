@@ -77,7 +77,7 @@ class HubUrlExtractor
             $tagQuery = '/atom:feed/atom:link[';
 
         } else if ($type === 'application/rss+xml') {
-            $tagQuery = '/rss/channel/link[';
+            $tagQuery = '/rss/channel/*[(self::link or self::atom:link) and ';
 
         } else {
             $tagQuery = '/*[self::html or self::h:html]'
