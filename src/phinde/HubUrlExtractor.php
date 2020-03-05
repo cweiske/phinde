@@ -43,7 +43,8 @@ class HubUrlExtractor
         list($type) = explode(';', $res->getHeader('Content-type'));
         if ($type != 'text/html' && $type != 'text/xml'
             && $type != 'application/xhtml+xml'
-            //FIXME: atom, rss
+            && $type != 'application/atom+xml'
+            && $type != 'application/rss+xml'
             && $res->getStatus() != 405//HEAD method not allowed
         ) {
             //we will not be able to extract links from the content
@@ -65,18 +66,27 @@ class HubUrlExtractor
             return $this->absolutifyUrls($urls, $base);
         }
 
-        //FIXME: atom/rss
         $body = $res->getBody();
         $doc = $this->loadHtml($body, $res);
 
         $xpath = new \DOMXPath($doc);
         $xpath->registerNamespace('h', 'http://www.w3.org/1999/xhtml');
+        $xpath->registerNamespace('atom', 'http://www.w3.org/2005/Atom');
 
+        if ($type === 'application/atom+xml') {
+            $tagQuery = '/atom:feed/atom:link[';
+
+        } else if ($type === 'application/rss+xml') {
+            $tagQuery = '/rss/channel/link[';
+
+        } else {
+            $tagQuery = '/*[self::html or self::h:html]'
+                . '/*[self::head or self::h:head]'
+                . '/*[(self::link or self::h:link)'
+                . ' and';
+        }
         $nodeList = $xpath->query(
-            '/*[self::html or self::h:html]'
-            . '/*[self::head or self::h:head]'
-            . '/*[(self::link or self::h:link)'
-            . ' and'
+            $tagQuery
             . ' ('
             . '  contains(concat(" ", normalize-space(@rel), " "), " hub ")'
             . '  or'
@@ -163,6 +173,8 @@ class HubUrlExtractor
         if ($type == 'application/xhtml+xml'
             || $type == 'application/xml'
             || $type == 'text/xml'
+            || $type == 'application/atom+xml'
+            || $type == 'application/rss+xml'
         ) {
             $doc->loadXML($sourceBody);
         } else {
