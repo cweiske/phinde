@@ -6,6 +6,7 @@ CREATE TABLE `subscriptions` (
   `sub_expires` datetime NOT NULL,
   `sub_secret` varchar(256) NOT NULL,
   `sub_capkey` varchar(128) NOT NULL,
+  `sub_hub` varchar(4096) NOT NULL,
   `sub_created` datetime NOT NULL,
   `sub_updated` datetime NOT NULL,
   `sub_pings` int NOT NULL,

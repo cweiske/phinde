@@ -45,7 +45,7 @@ if ($topic != $url) {
 
 $sub = $subDb->get($topic);
 if ($sub === false) {
-    $subDb->create($topic);
+    $subDb->create($topic, $hub);
 } else {
     Log::info(
         'Topic exists already in subscription table with status '
@@ -53,6 +53,7 @@ if ($sub === false) {
     );
     Log::info('Renewing subscription...');
     $subDb->renew($sub->sub_id);
+    $hub = $sub->sub_hub;
 }
 $sub = $subDb->get($topic);
 

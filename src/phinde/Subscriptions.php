@@ -110,19 +110,20 @@ class Subscriptions
      * - send subscription requests to the hub
      *
      * @param string $topic URL to subscribe to
+     * @param string $hub   URL of the hub subscribing to
      *
      * @return void
      */
-    public function create($topic)
+    public function create($topic, $hub)
     {
         $stmt = $this->db->prepare(
             'INSERT INTO subscriptions'
             . ' (sub_topic, sub_status, sub_lease_seconds, sub_expires'
-            . ', sub_secret, sub_capkey, sub_created, sub_updated'
+            . ', sub_secret, sub_capkey, sub_hub, sub_created, sub_updated'
             . ', sub_pings, sub_lastping, sub_statusmessage)'
             . ' VALUES '
             . ' (:topic, "subscribing", :lease_seconds, "0000-00-00 00:00:00"'
-            . ', :secret, :capkey, NOW(), NOW()'
+            . ', :secret, :capkey, :hub, NOW(), NOW()'
             . ', 0, "0000-00-00 00:00:00", "")'
         );
         $stmt->execute(
@@ -131,6 +132,7 @@ class Subscriptions
                 ':lease_seconds' => 86400 * 30,
                 ':secret'        => bin2hex(openssl_random_pseudo_bytes(16)),
                 ':capkey'        => bin2hex(openssl_random_pseudo_bytes(16)),
+                ':hub'           => $hub,
             ]
         );
     }

@@ -1,7 +1,7 @@
 <?php
 namespace phinde;
 /**
- * Handles PuSH subscription responses
+ * Handles WebSub subscription responses
  */
 header('HTTP/1.0 500 Internal Server Error');
 require_once 'www-header.php';
