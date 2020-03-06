@@ -146,9 +146,9 @@ https://www.elastic.co/guide/en/elasticsearch/plugins/2.0/delete-by-query-usage.
 
 Subscribe to a website/feed
 ===========================
-Phinde supports WebSub to get subscribe to changes of a website.
-When phinde gets notified by the hub about changes, it will
-immediately crawl and index the changed pages.
+Phinde supports WebSub__ to get subscribe to changes of a website.
+When phinde gets notified by the website's hub about changes,
+it will immediately crawl and index the changed pages.
 
 Subscribe to a website's feed::
 
@@ -158,6 +158,12 @@ Phinde will determine the website's hub and send a registration request to it.
 
 The status page will show the number of working, and the number of open
 subscriptions.
+
+Unsubscribing also happens on command line::
+
+    $ php bin/unsubscribe.php http://example.org/feed.atom
+
+__ https://www.w3.org/TR/websub/
 
 ============
 About phinde
