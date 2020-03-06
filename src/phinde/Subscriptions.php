@@ -181,7 +181,24 @@ class Subscriptions
     }
 
     /**
-     * Mark a subscription as "unsubscribed"
+     * Begin removal of a a subscription: Set its status to "unsubscribing"
+     *
+     * @param integer $subId Subscription ID
+     *
+     * @return void
+     */
+    public function unsubscribing($subId)
+    {
+        $this->db->prepare(
+            'UPDATE subscriptions'
+            . ' SET sub_status  = "unsubscribing"'
+            . '   , sub_updated = NOW()'
+            . ' WHERE sub_id = :id'
+        )->execute([':id' => $subId]);
+    }
+
+    /**
+     * Mark a subscription as "unsubscribed" - delete it
      *
      * @param integer $subId Subscription ID
      *
@@ -189,12 +206,9 @@ class Subscriptions
      */
     public function unsubscribed($subId)
     {
-        $this->db->prepare(
-            'UPDATE subscriptions'
-            . ' SET sub_status = "unsubscribed"'
-            . '   , sub_updated = NOW()'
-            . ' WHERE sub_id = :id'
-        )->execute([':id' => $subId]);
+        $this->db
+            ->prepare('DELETE FROM subscriptions WHERE sub_id = :id')
+            ->execute([':id' => $subId]);
     }
 
     /**
