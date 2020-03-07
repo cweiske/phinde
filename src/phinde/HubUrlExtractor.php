@@ -196,8 +196,7 @@ class HubUrlExtractor
     public function getRequest()
     {
         if ($this->request === null) {
-            $request = new \HTTP_Request2();
-            $request->setConfig('follow_redirects', true);
+            $request = new HttpRequest();
             $this->setRequestTemplate($request);
         }
 
