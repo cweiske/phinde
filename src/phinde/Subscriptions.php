@@ -262,7 +262,7 @@ class Subscriptions
         $urls = $hue->getUrls($url);
         //we violate the spec by not requiring a self URL
         $topicUrl = isset($urls['self']) ? $urls['self'] : $url;
-        $hubUrl   = isset($urls['hub'])  ? $urls['hub'] : null;
+        $hubUrl   = isset($urls['hub'][0]) ? $urls['hub'][0] : null;
 
         return array($topicUrl, $hubUrl);
     }

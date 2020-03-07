@@ -1,6 +1,11 @@
 <?php
 namespace phinde;
 
+/**
+ * Perform WebSub discovery for "hub" and "self" URLs
+ *
+ * @link https://www.w3.org/TR/websub/#discovery
+ */
 class HubUrlExtractor
 {
     /**
@@ -16,7 +21,11 @@ class HubUrlExtractor
      *
      * @param string $url Topic URL
      *
-     * @return array Array of URLs with keys: hub, self
+     * @return array Array of URLs with keys: hub, self.
+     *               - "self" value is the URL
+     *               - "hub"  value is an array of URLs
+     *               Keys may be there but most not if the URL
+     *               does not advertise them.
      */
     public function getUrls($url)
     {
@@ -29,7 +38,7 @@ class HubUrlExtractor
         if (intval($res->getStatus() / 100) >= 4
             && $res->getStatus() != 405 //method not supported/allowed
         ) {
-            return null;
+            return [];
         }
 
         $url  = $res->getEffectiveUrl();
@@ -65,6 +74,8 @@ class HubUrlExtractor
         if (count($urls) === 2) {
             return $this->absolutifyUrls($urls, $base);
         }
+
+        $urls = [];//do not mix header and content links
 
         $body = $res->getBody();
         $doc = $this->loadHtml($body, $res);
@@ -111,15 +122,16 @@ class HubUrlExtractor
                 if ($type == 'canonical') {
                     $type = 'self';
                 }
-                if ($type == 'hub' || $type == 'self'
-                    && !isset($urls[$type])
-                ) {
-                    $urls[$type] = $uri;
+                if ($type == 'self' && !isset($urls['self'])) {
+                    $urls['self'] = $uri;
+                } else if ($type == 'hub') {
+                    $urls['hub'][] = $uri;
                 }
             }
         }
 
-        //FIXME: base href
+        //<base href=".."> extraction is not necessary; RFC 5988 says:
+        // Note that any base IRI from the message's content is not applied.
         return $this->absolutifyUrls($urls, $base);
     }
 
@@ -138,10 +150,8 @@ class HubUrlExtractor
         $links = $http->parseLinks($res->getHeader('Link'));
         foreach ($links as $link) {
             if (isset($link['_uri']) && isset($link['rel'])) {
-                if (!isset($urls['hub'])
-                    && array_search('hub', $link['rel']) !== false
-                ) {
-                    $urls['hub'] = $link['_uri'];
+                if (array_search('hub', $link['rel']) !== false) {
+                    $urls['hub'][] = $link['_uri'];
                 }
                 if (!isset($urls['self'])
                     && array_search('self', $link['rel']) !== false
@@ -221,7 +231,7 @@ class HubUrlExtractor
     /**
      * Make the list of urls absolute
      *
-     * @param array  $urls Array of maybe relative URLs
+     * @param array  $urls Array of maybe relative URLs, or array of URLs
      * @param object $base Base URL to resolve the relatives against
      *
      * @return array List of absolute URLs
@@ -229,7 +239,13 @@ class HubUrlExtractor
     protected function absolutifyUrls($urls, \Net_URL2 $base)
     {
         foreach ($urls as $key => $url) {
-            $urls[$key] = (string) $base->resolve($url);
+            if (is_array($url)) {
+                foreach ($url as $singleKey => $singleUrl) {
+                    $urls[$key][$singleKey] = (string) $base->resolve($singleUrl);
+                }
+            } else {
+                $urls[$key] = (string) $base->resolve($url);
+            }
         }
         return $urls;
     }

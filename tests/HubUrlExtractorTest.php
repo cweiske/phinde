@@ -21,7 +21,40 @@ class HubUrlExtractorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             [
-                'hub'  => 'https://hub.example.com/',
+                'hub'  => ['https://hub.example.com/'],
+                'self' => 'http://example.com/feed',
+            ],
+            $extractor->getUrls('http://example.org/')
+        );
+    }
+
+    public function testGetUrlsMultipleHubsHEAD()
+    {
+        $mock = new HTTP_Request2_Adapter_Mock();
+        $this->addResponse(
+            $mock,
+            "HTTP/1.0 200 OK\r\n"
+            . "Content-type: text/html\r\n"
+            . "Link: <https://hub.example.com/>; rel=\"hub\"\r\n"
+            . "Link: <https://hub2.example.com/>; rel=\"hub\"\r\n"
+            . "Link: <http://example.com/feed>; rel=\"self\"\r\n"
+            . "Link: <https://hub3.example.com/>; rel=\"hub\"\r\n"
+            . "\r\n",
+            'http://example.org/'
+        );
+
+        $extractor = new phinde\HubUrlExtractor();
+        $extractor->setRequestTemplate(
+            new HTTP_Request2(null, null, ['adapter' => $mock])
+        );
+
+        $this->assertEquals(
+            [
+                'hub'  => [
+                    'https://hub.example.com/',
+                    'https://hub2.example.com/',
+                    'https://hub3.example.com/',
+                ],
                 'self' => 'http://example.com/feed',
             ],
             $extractor->getUrls('http://example.org/')
@@ -63,7 +96,53 @@ HTM,
 
         $this->assertEquals(
             [
-                'hub'  => 'https://hub.example.com/',
+                'hub'  => ['https://hub.example.com/'],
+                'self' => 'http://example.com/feed',
+            ],
+            $extractor->getUrls('http://example.org/')
+        );
+    }
+
+    public function testGetUrlsHtmlMultipleHubs()
+    {
+        $mock = new HTTP_Request2_Adapter_Mock();
+        //HEAD
+        $this->addResponse(
+            $mock,
+            "HTTP/1.0 200 OK\r\n"
+            . "Content-type: text/html\r\n"
+            . "\r\n",
+            'http://example.org/'
+        );
+        //HEAD
+        $this->addResponse(
+            $mock,
+            "HTTP/1.0 200 OK\r\n"
+            . "Content-type: text/html\r\n"
+            . "\r\n"
+            . <<<HTM
+<html>
+ <head>
+  <link rel='hub' href='https://hub.example.com/'/>
+  <link rel='hub' href='https://hub2.example.com/'/>
+  <link rel='self' href='http://example.com/feed'/>
+ </head>
+</html>
+HTM,
+            'http://example.org/'
+        );
+
+        $extractor = new phinde\HubUrlExtractor();
+        $extractor->setRequestTemplate(
+            new HTTP_Request2(null, null, ['adapter' => $mock])
+        );
+
+        $this->assertEquals(
+            [
+                'hub'  => [
+                    'https://hub.example.com/',
+                    'https://hub2.example.com/',
+                ],
                 'self' => 'http://example.com/feed',
             ],
             $extractor->getUrls('http://example.org/')
@@ -105,7 +184,7 @@ HTM,
 
         $this->assertEquals(
             [
-                'hub'  => 'https://hub.example.com/',
+                'hub'  => ['https://hub.example.com/'],
                 'self' => 'http://example.com/feed',
             ],
             $extractor->getUrls('http://example.org/')
@@ -147,7 +226,7 @@ HTM,
 
         $this->assertEquals(
             [
-                'hub'  => 'https://hub.example.com/',
+                'hub'  => ['https://hub.example.com/'],
                 'self' => 'http://example.com/feed',
             ],
             $extractor->getUrls('http://example.org/')
@@ -191,7 +270,7 @@ HTM,
 
         $this->assertEquals(
             [
-                'hub'  => 'https://hub.example.com/',
+                'hub'  => ['https://hub.example.com/'],
                 'self' => 'http://example.com/feed',
             ],
             $extractor->getUrls('http://example.org/')
@@ -235,7 +314,7 @@ HTM,
 
         $this->assertEquals(
             [
-                'hub'  => 'https://hub.example.com/',
+                'hub'  => ['https://hub.example.com/'],
                 'self' => 'http://example.com/feed',
             ],
             $extractor->getUrls('http://example.org/')
