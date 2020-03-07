@@ -344,5 +344,82 @@ HTM,
         }
         return $response;
     }
+
+    /**
+     * It is possible to subscribe to URLs that redirect if
+     * they have a hub and self links in the HTTP headers.
+     * If they don't, we need to follow the redirect.
+     */
+    public function testGetUrlsHEADLinksForRedirect()
+    {
+        $mock = new HTTP_Request2_Adapter_Mock();
+        $this->addResponse(
+            $mock,
+            "HTTP/1.0 307 Temporary Redirect\r\n"
+            . "Content-type: text/html\r\n"
+            . "Location: http://example.org/redir-target\r\n"
+            . "Link: <https://hub.example.com/>; rel=\"hub\"\r\n"
+            . "Link: <http://example.com/feed>; rel=\"self\"\r\n"
+            . "\r\n",
+            'http://example.org/'
+        );
+        $this->addResponse(
+            $mock,
+            "HTTP/1.0 200 OK\r\n"
+            . "Content-type: text/html\r\n"
+            . "Link: <https://redir-hub.example.com/>; rel=\"hub\"\r\n"
+            . "Link: <http://example.com/redir-feed>; rel=\"self\"\r\n"
+            . "\r\n",
+            'http://example.org/redir-target'
+        );
+
+        $extractor = new phinde\HubUrlExtractor();
+        $extractor->setRequestTemplate(
+            new HTTP_Request2(null, null, ['adapter' => $mock])
+        );
+
+        $this->assertEquals(
+            [
+                'hub'  => ['https://hub.example.com/'],
+                'self' => 'http://example.com/feed',
+            ],
+            $extractor->getUrls('http://example.org/')
+        );
+    }
+
+    public function testGetUrlsHEADLinksForRedirectNone()
+    {
+        $mock = new HTTP_Request2_Adapter_Mock();
+        $this->addResponse(
+            $mock,
+            "HTTP/1.0 307 Temporary Redirect\r\n"
+            . "Content-type: text/html\r\n"
+            . "Location: http://example.org/redir-target\r\n"
+            . "\r\n",
+            'http://example.org/'
+        );
+        $this->addResponse(
+            $mock,
+            "HTTP/1.0 200 OK\r\n"
+            . "Content-type: text/html\r\n"
+            . "Link: <https://redir-hub.example.com/>; rel=\"hub\"\r\n"
+            . "Link: <http://example.com/redir-feed>; rel=\"self\"\r\n"
+            . "\r\n",
+            'http://example.org/redir-target'
+        );
+
+        $extractor = new phinde\HubUrlExtractor();
+        $extractor->setRequestTemplate(
+            new HTTP_Request2(null, null, ['adapter' => $mock])
+        );
+
+        $this->assertEquals(
+            [
+                'hub'  => ['https://redir-hub.example.com/'],
+                'self' => 'http://example.com/redir-feed',
+            ],
+            $extractor->getUrls('http://example.org/')
+        );
+    }
 }
 ?>

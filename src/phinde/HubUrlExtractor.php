@@ -19,7 +19,8 @@ class HubUrlExtractor
      * Get the hub and self/canonical URL of a given topic URL.
      * Uses link headers and parses HTML link rels.
      *
-     * @param string $url Topic URL
+     * @param string $url       Topic URL
+     * @param int    $redirects Number of redirects that were followed
      *
      * @return array Array of URLs with keys: hub, self.
      *               - "self" value is the URL
@@ -27,12 +28,13 @@ class HubUrlExtractor
      *               Keys may be there but most not if the URL
      *               does not advertise them.
      */
-    public function getUrls($url)
+    public function getUrls($url, $redirects = 0)
     {
         //at first, try a HEAD request that does not transfer so much data
         $req = $this->getRequest();
         $req->setUrl($url);
         $req->setMethod(\HTTP_Request2::METHOD_HEAD);
+        $req->setConfig('follow_redirects', false);
         $res = $req->send();
 
         if (intval($res->getStatus() / 100) >= 4
@@ -47,6 +49,15 @@ class HubUrlExtractor
         $urls = $this->extractHeader($res);
         if (count($urls) === 2) {
             return $this->absolutifyUrls($urls, $base);
+        }
+
+        if ($res->isRedirect()) {
+            //we tried header links and that failed, now follow the redirect
+            if ($redirects > 5) {
+                return [];
+            }
+            $redirectUrl = (string) $base->resolve($res->getHeader('location'));
+            return $this->getUrls($redirectUrl, $redirects + 1);
         }
 
         list($type) = explode(';', $res->getHeader('Content-type'));
