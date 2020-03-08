@@ -29,7 +29,7 @@ class Fetcher
 
         $types = array();
         foreach ($actions as $action) {
-            $types = array_merge($action::$supportedTypes);
+            $types = array_merge($types, array_keys($action::$supportedTypes));
         }
         $types = array_unique($types);
 

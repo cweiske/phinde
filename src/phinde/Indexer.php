@@ -4,8 +4,8 @@ namespace phinde;
 class Indexer
 {
     static $supportedTypes = array(
-        'application/xhtml+xml',
-        'text/html',
+        'application/xhtml+xml' => true,
+        'text/html'             => true,
     );
 
     public function run(Retrieved $retrieved)
