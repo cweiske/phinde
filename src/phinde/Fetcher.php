@@ -17,14 +17,15 @@ class Fetcher
     {
         $url = Helper::rewriteUrl($url);
 
-        $esDoc = $this->es->get($url);
+        $esDoc  = $this->es->get($url);
+        $locUrl = null;
         if (isset($esDoc->status->location)
             && $esDoc->status->location != ''
         ) {
-            //TODO: what if location redirects change?
-            $url = $esDoc->status->location;
-            $url = Helper::rewriteUrl($url);
-            $esDoc = $this->es->get($url);
+            //Location redirect: Use modified time of known target
+            $locUrl = $esDoc->status->location;
+            $locUrl = Helper::rewriteUrl($locUrl);
+            $esDoc = $this->es->get($locUrl);
         }
 
         $types = array();
@@ -44,8 +45,17 @@ class Fetcher
         }
 
         $res = $req->send();
+        $effUrl = Helper::removeAnchor($res->getEffectiveUrl());
+        $effUrl = Helper::rewriteUrl($effUrl);
+
         if ($res->getStatus() === 304) {
             //not modified since last time, so don't crawl again
+            if ($locUrl !== null && $effUrl != $locUrl) {
+                //location URL changed, and we used the wrong crawl timestampx
+                $this->storeRedirect($url, $effUrl);
+                return $this->fetch($url, $actions, $force);
+            }
+
             Log::info("Not modified since last fetch");
             return false;
         } else if ($res->getStatus() !== 200) {
@@ -55,8 +65,6 @@ class Fetcher
             );
         }
 
-        $effUrl = Helper::removeAnchor($res->getEffectiveUrl());
-        $effUrl = Helper::rewriteUrl($effUrl);
         if ($effUrl != $url) {
             $this->storeRedirect($url, $effUrl);
             $url = $effUrl;
