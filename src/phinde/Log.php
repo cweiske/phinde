@@ -5,7 +5,7 @@ class Log
 {
     public static function error($msg)
     {
-        static::log($msg);
+        static::log($msg, STDERR);
     }
 
     public static function info($msg)
@@ -15,7 +15,7 @@ class Log
         }
     }
 
-    public static function log($msg)
+    public static function log($msg, $stream = STDOUT)
     {
         if (isset($GLOBALS['phinde']['logfile'])
             && $GLOBALS['phinde']['logfile'] != ''
@@ -25,7 +25,7 @@ class Log
                 $msg . "\n", FILE_APPEND
             );
         } else {
-            echo $msg . "\n";
+            fwrite($stream, $msg . "\n");
         }
     }
 }
