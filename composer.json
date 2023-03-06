@@ -1,5 +1,10 @@
 {
+    "name": "cweiske/phinde",
+    "description": "Self-hosted search engine",
+    "license": "AGPL-3.0-only",
     "require": {
+        "ext-gearman": "^2",
+        "ext-pdo": "*",
         "pear/console_commandline": "^1.2",
         "pear/net_url2": "^2.2",
         "twig/twig": "^1.0",

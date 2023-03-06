@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7b7ba20b963c1b3be2aec1ed351f1cb4",
+    "content-hash": "e6dec87fbc8da28408e2ae45e0205e1c",
     "packages": [
         {
             "name": "pear/console_commandline",
@@ -2200,7 +2200,10 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-gearman": "^2",
+        "ext-pdo": "*"
+    },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
 }
