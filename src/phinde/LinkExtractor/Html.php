@@ -61,7 +61,7 @@ class Html
                     }
                 }
             }
-            if ($href == '' || $href{0} == '#') {
+            if ($href == '' || $href[0] == '#') {
                 //link on this page
                 continue;
             }
