@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e6dec87fbc8da28408e2ae45e0205e1c",
+    "content-hash": "96457dd61271ec6560557fc326b4925e",
     "packages": [
         {
             "name": "pear/console_commandline",
@@ -68,20 +68,20 @@
         },
         {
             "name": "pear/http2",
-            "version": "v1.1.2",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/HTTP2.git",
-                "reference": "b87527415aa1439d5abc2c620a37f0047c3b1568"
+                "reference": "72e15b4faa86f6109c6fc3aa82c5515b6453b3b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/HTTP2/zipball/b87527415aa1439d5abc2c620a37f0047c3b1568",
-                "reference": "b87527415aa1439d5abc2c620a37f0047c3b1568",
+                "url": "https://api.github.com/repos/pear/HTTP2/zipball/72e15b4faa86f6109c6fc3aa82c5515b6453b3b5",
+                "reference": "72e15b4faa86f6109c6fc3aa82c5515b6453b3b5",
                 "shasum": ""
             },
             "require-dev": {
-                "pear/pear-core": "*"
+                "phpunit/phpunit": "^9"
             },
             "type": "library",
             "autoload": {
@@ -90,9 +90,6 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "include-path": [
-                "./"
-            ],
             "license": [
                 "BSD-2-Clause"
             ],
@@ -114,7 +111,7 @@
                 "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=HTTP2",
                 "source": "https://github.com/pear/HTTP2"
             },
-            "time": "2016-08-10T19:11:15+00:00"
+            "time": "2023-03-22T20:22:11+00:00"
         },
         {
             "name": "pear/http_request2",

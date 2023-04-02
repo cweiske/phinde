@@ -9,7 +9,7 @@
         "pear/net_url2": "^2.2",
         "twig/twig": "^1.0",
         "pear/http_request2": "^2.3",
-        "pear/http2": "^1.1"
+        "pear/http2": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0"
