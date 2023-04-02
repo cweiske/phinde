@@ -36,28 +36,27 @@ Features
 ============
 Dependencies
 ============
-- PHP 5.5+
+- PHP 8.x
 - Elasticsearch 2.0
 - MySQL or MariaDB for WebSub subscriptions
 - Gearman (Debian 9: ``gearman-job-server``, not ``gearman-server``)
+- ``gearadmin`` command line tool (``gearman-tools`` package)
 - PHP Gearman extension
-- Console_CommandLine
-- Net_URL2
-- Twig 1.x
+- Some PHP libraries that get installed with composer
 
 
 =====
 Setup
 =====
 #. Install and run Elasticsearch and Gearman
-#. Install ``php-gearman``
+#. Install ``php-gearman`` and ``gearman-tools``
 #. Get a local copy of the code::
 
      $ git clone https://git.cweiske.de/phinde.git phinde
 
 #. Install dependencies via composer::
 
-     $ composer install
+     $ composer install --no-dev
 
 #. Point your webserver's document root to phinde's ``www`` directory
 #. Copy ``data/config.php.dist`` to ``data/config.php`` and adjust it.
