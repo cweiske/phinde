@@ -5,7 +5,7 @@ class Log
 {
     public static function error($msg)
     {
-        static::log($msg, STDERR);
+        static::log($msg, 'php://stderr');
     }
 
     public static function info($msg)
@@ -15,7 +15,7 @@ class Log
         }
     }
 
-    public static function log($msg, $stream = STDOUT)
+    public static function log($msg, $stream = 'php://stdout')
     {
         if (isset($GLOBALS['phinde']['logfile'])
             && $GLOBALS['phinde']['logfile'] != ''
